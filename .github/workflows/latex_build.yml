@@ -20,10 +20,11 @@ jobs:
       # Step 2: Determine the latest Git tag (fallback to v0.0.0 if none exists)
       - name: Get latest Git tag
         run: |
+          git config --global --add safe.directory /__w/prismaid_manual/prismaid_manual
           git fetch --tags
           TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
           echo "Latest tag: $TAG"
-          echo "$TAG" > version.tex  # Save the version to a file
+          echo "$TAG" > version.tex
 
       # Step 3: Compile the LaTeX file with XeLaTeX
       - name: Compile Manual to PDF
