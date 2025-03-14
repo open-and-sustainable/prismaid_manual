@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+title: prismAId User Manual
+message: >-
+  v0.0.1 - manual outline.
+authors:
+  - given-names: Riccardo
+    family-names: Boero
+    email: ribo@nilu.no
+    orcid: 'https://orcid.org/0000-0002-7468-9096'
+    affiliation: NILU
+repository-code: 'https://github.com/open-and-sustainable/prismaid_manual'
+url: 'https://open-and-sustainable.github.io/prismaid_manual/'
+abstract: >-
+  prismAId (Open Science AI Tools for Systematic, Protocol-Based Literature Reviews) uses generative AI models to extract data from
+  scientific literature. It offers simple-to-use, efficient,
+  and replicable methods for analyzing literature when
+  conducting systematic reviews. This manual explains how to install, configure, and use prismAId for systematic reviews.
+keywords:
+  - Systematic Review
+  - Generative AI
+  - Open Source
+  - Open Science
+license: CC BY-SA 4.0
