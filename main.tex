@@ -1,0 +1,245 @@
+\documentclass{tufte-book}
+
+% Font and Encoding
+\usepackage{fontspec}
+\setmainfont{Open Sans}[SmallCapsFont={}]
+
+% Disable \nobibliography warning if no bibliography is used
+\usepackage{etoolbox}
+\AtBeginDocument{\let\nobibliography\relax}
+
+% for the toc
+\makeatletter
+\renewcommand{\l@part}[2]{%
+  \addvspace{1.5em}\noindent
+  {\bfseries\Large\color{brightred}\MakeUppercase{Part #1}}\hfill
+  {\bfseries\Large\color{brightred}#2}  % Correctly reference the page number
+  \par\addvspace{1.0em}
+}
+\makeatother
+
+\makeatletter
+\renewcommand{\l@chapter}[2]{%
+  \addvspace{1em}%
+  {\bfseries\normalsize\color{brightred}#1}\hfill
+  {\bfseries\normalsize\color{brightred}#2} % Ensures only the correct page number
+  \par\addvspace{0.5em}
+}
+\makeatother
+
+% for the parts titles
+\usepackage{titlesec}  % Allows custom part title styling
+\titleformat{\part}[display]
+  {\Huge\bfseries\color{brightblue}}  % Ensures bright blue styling
+  {\partname~\thepart}  % "Part X"
+  {20pt}{}
+
+% Updated Color Definitions (based on GIMP values)
+\usepackage{xcolor}
+\definecolor{brightred}{rgb}{0.976, 0.247, 0.118}  % Bright Red (Main Red)
+\definecolor{darkred}{rgb}{0.631, 0.098, 0.047}    % Dark Red (Accent)
+\definecolor{brightblue}{rgb}{0.0, 0.0, 1.0}       % Bright Blue (Main Blue)
+\definecolor{darkblue}{rgb}{0.0, 0.0, 0.318}       % Dark Blue (Accent)
+
+% Enable Page Numbers (Fix for tufte-book)
+\usepackage{fancyhdr}
+\fancypagestyle{plain}{%
+    \fancyhf{}  % Clear header/footer
+    \fancyfoot[C]{\thepage}  % Page number at the bottom center
+    \renewcommand{\headrulewidth}{0pt}  % Remove header line
+    \renewcommand{\footrulewidth}{0pt}  % Remove footer line
+}
+\pagestyle{plain}  % Apply numbering globally
+
+% Colored boxes (less rounded)
+\usepackage{tcolorbox}
+\tcbuselibrary{skins}
+
+% Colored boxes tyoes
+\newtcolorbox{commandbox}[1][]{%
+    colframe=brightblue, colback=brightblue!10, coltitle=white, % White title text
+    boxrule=1pt, arc=1mm, left=5pt, right=5pt, top=5pt, bottom=5pt,
+    fonttitle=\bfseries, title={#1}, colbacktitle=brightblue % Match background color
+}
+
+\newtcolorbox{configbox}[1][]{%
+    colframe=brightred, colback=brightred!10, coltitle=white, % White title text
+    boxrule=1pt, arc=1mm, left=5pt, right=5pt, top=5pt, bottom=5pt,
+    fonttitle=\bfseries, title={#1}, colbacktitle=brightred % Match background color
+}
+
+% Code Formatting
+\usepackage{listings}
+\lstset{
+    backgroundcolor=\color{darkblue!5},
+    basicstyle=\ttfamily\footnotesize,
+    frame=single,
+    rulecolor=\color{darkblue},
+    breaklines=true,
+    keywordstyle=\color{brightblue}\bfseries,
+    commentstyle=\color{darkred},
+    stringstyle=\color{brightred}
+}
+
+% Define TOML Syntax
+\lstdefinelanguage{TOML}{
+    morekeywords={true,false},
+    sensitive=true,
+    morecomment=[l]{\#},  % TOML comments start with #
+    morestring=[b]",      % Strings in double quotes
+    morestring=[b]',      % Strings in single quotes
+    keywordstyle=\color{brightblue}\bfseries,
+    commentstyle=\color{darkred},
+    stringstyle=\color{brightred},
+    showspaces=false
+}
+
+% Define Bash Syntax
+\lstdefinelanguage{Bash}{
+    morekeywords={if, then, else, fi, for, while, do, done, exit, echo},
+    sensitive=true,
+    morecomment=[l]{\#},  % Comments start with #
+    morestring=[b]",      % Double-quoted strings
+    morestring=[b]',      % Single-quoted strings
+    keywordstyle=\color{brightblue}\bfseries,
+    commentstyle=\color{darkred},
+    stringstyle=\color{brightred}
+}
+
+% Define Python Syntax
+\lstdefinelanguage{Python}{
+    morekeywords={def, return, if, elif, else, for, while, break, continue, import, from, as, class, try, except, with, yield, lambda, global, nonlocal, pass, raise, True, False, None},
+    sensitive=true,
+    morecomment=[l]{\#},  % Python comments start with #
+    morestring=[b]",      % Double-quoted strings
+    morestring=[b]',      % Single-quoted strings
+    keywordstyle=\color{brightblue}\bfseries,
+    commentstyle=\color{darkred},
+    stringstyle=\color{brightred}
+}
+
+% Define Go Syntax
+\lstdefinelanguage{Go}{
+    morekeywords={package, import, func, return, var, const, type, struct, interface, map, range, if, else, for, switch, case, default, go, select, defer, break, continue, fallthrough},
+    sensitive=true,
+    morecomment=[l]{//},  % Single-line comment
+    morecomment=[s]{/*}{*/}, % Multi-line comment
+    morestring=[b]",      % Double-quoted strings
+    morestring=[b]`,      % Backtick strings
+    keywordstyle=\color{brightblue}\bfseries,
+    commentstyle=\color{darkred},
+    stringstyle=\color{brightred}
+}
+
+% Define R Syntax
+\lstdefinelanguage{R}{
+    morekeywords={if, else, repeat, while, function, for, in, next, break, TRUE, FALSE, NULL, NA, NaN, Inf},
+    sensitive=true,
+    morecomment=[l]{\#},  % R comments start with #
+    morestring=[b]",      % Double-quoted strings
+    morestring=[b]',      % Single-quoted strings
+    keywordstyle=\color{brightblue}\bfseries,
+    commentstyle=\color{darkred},
+    stringstyle=\color{brightred}
+}
+
+% Define Julia Syntax
+\lstdefinelanguage{Julia}{
+    morekeywords={function, return, if, elseif, else, for, while, break, continue, import, using, struct, mutable, try, catch, finally, true, false, nothing},
+    sensitive=true,
+    morecomment=[l]{\#},  % Julia comments start with #
+    morestring=[b]",      % Double-quoted strings
+    morestring=[b]',      % Single-quoted strings
+    keywordstyle=\color{brightblue}\bfseries,
+    commentstyle=\color{darkred},
+    stringstyle=\color{brightred}
+}
+
+% Colored Section Headings
+\usepackage{sectsty}
+\chapterfont{\color{brightred}}   % Chapter titles in bright red
+\sectionfont{\color{darkred}}     % Section titles in dark red
+\subsectionfont{\color{brightblue}} % Subsection titles in bright blue
+
+% Hyperlinks
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=brightred,
+    urlcolor=brightblue,
+    citecolor=darkred
+}
+
+% Define Custom Margin Note Commands
+\newcommand{\tip}[1]{\marginnote{\textbf{\textcolor{brightblue}{Tip:}} #1}}
+\newcommand{\warning}[1]{\marginnote{\textbf{\textcolor{brightred}{Warning:}} #1}}
+\newcommand{\reminder}[1]{\marginnote{\textbf{\textcolor{darkred}{Reminder:}} #1}}
+\newcommand{\note}[1]{\marginnote{\textbf{\textcolor{darkblue}{Note:}} #1}}
+
+% Define a command to reference sections or chapters properly
+\newcommand{\secref}[2]{\hyperref[#1]{\textbf{#2}}}
+
+% for version tagging in document
+\newcommand{\docversion}{\input{version.tex}}
+
+% Define title manually to bypass \maketitle issues
+\newcommand{\customtitle}{
+    \begin{titlepage}
+        \centering
+        \vspace*{3cm}
+        \begin{figure}
+            \centering
+            \includegraphics{figures/prismAId_logo.png}
+        \end{figure}
+        {\Huge\bfseries\sffamily prism\textcolor{brightred}{A}\textcolor{brightblue}{I}d User Manual}\\[2cm]
+        {\Large\textit{Riccardo Boero}}\\[0.5cm]
+        \texttt{ribo@nilu.no}\\[6cm]
+        {\large\today}\\[0.5cm]  % Email
+        {\large Version: \docversion}\\[1cm]  % tagged version
+        DOI: \href{https://doi.org/10.xxxx/xxxxx}{10.xxxx/xxxxx}  % DOI link
+        \vfill
+    \end{titlepage}
+    \thispagestyle{plain}  % Force page number on the title page
+}
+
+\begin{document}
+\lstset{showstringspaces=false}
+\customtitle  % Use custom title instead of \maketitle
+
+\tableofcontents  % Table of Contents after the title page
+\newpage
+\pagestyle{plain}  % Ensure numbering continues
+
+\include{foreword}
+
+% ==============================
+% Part 1: Introduction
+% ==============================
+\part{Introduction}
+\include{introduction}
+
+% ==============================
+% Part 2: Getting Started
+% ==============================
+\part{Getting Started}
+\include{getting_started}
+
+% ==============================
+% Part 3: Conducting a Systematic Review
+% ==============================
+\part{Conducting a Systematic Review}
+\include{review}
+
+% ==============================
+% Part 4: Advanced Features
+% ==============================
+\part{Advanced Features}
+\include{advanced_features}
+
+% ==============================
+% Part 5: Troubleshooting \& FAQs
+% ==============================
+\part{Troubleshooting \& FAQs}
+\include{troubleshooting}
+
+\end{document}

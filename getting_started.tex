@@ -1,0 +1,271 @@
+\chapter{Installation \& Setup} 
+\label{chap:install}
+
+This chapter explains how to install \texttt{prismAId}, covering system requirements, installation steps, and first-time setup.
+
+\section{System Requirements}
+
+Before installing \texttt{prismAId}, ensure your system meets the following requirements:\warning{Ensure that you have administrative privileges on your system before installing \texttt{prismAId}, especially on Windows and macOS.}
+
+\begin{itemize}
+    \item \textbf{Operating System}: Windows 10 or later, macOS 11 or later, or a Linux distribution (Ubuntu 20.04+, Fedora, Arch, etc.).
+    \item \textbf{Processor}: 64-bit CPU (Intel, AMD, or ARM64).
+    \item \textbf{Memory}: At least 4GB RAM (8GB recommended).
+    \item \textbf{Storage}: Minimum 500MB of free disk space.
+\end{itemize}
+
+\section{Installation Instructions}
+
+\texttt{prismAId} can be installed as a standalone executable for direct use.
+
+\subsection{Installing the CLI Executable}
+
+Download the appropriate binary for your operating system from the page of releases in the official repository.
+
+\subsubsection{Windows}
+\reminder{On Windows, you may need to allow execution if prompted by security settings.}
+\begin{commandbox}[Command: Running \texttt{prismAId} on Windows]
+After downloading, navigate to the folder and run:
+\begin{lstlisting}[language=Bash]
+# Run the program
+./prismAId_windows_amd64.exe -project your_project.toml
+\end{lstlisting}
+\end{commandbox}
+
+
+\subsubsection{macOS}
+\warning{You may need to approve the application in \textbf{System Preferences} under \textbf{Security \& Privacy} before running it.}
+\begin{commandbox}[Command: Running \texttt{prismAId} on macOS]
+After downloading, give execution permissions and run:
+\begin{lstlisting}[language=Bash]
+chmod +x prismAId_mac_amd64
+./prismAId_mac_amd64 -project your_project.toml
+\end{lstlisting}
+\end{commandbox}
+
+\subsubsection{Linux}
+\tip{If you receive a "Permission denied" error, try running \texttt{chmod +x} again or executing with \texttt{sudo}.}
+\begin{commandbox}[Command: Running \texttt{prismAId} on Linux]
+\begin{lstlisting}[language=Bash]
+chmod +x prismAId_linux_amd64
+./prismAId_linux_amd64 -project your_project.toml
+\end{lstlisting}
+\end{commandbox}
+
+
+\section{First-Time Setup}
+
+After installation, create a new project configuration.
+
+\begin{commandbox}[Command: Creating a New Project]
+Run the following command:
+\begin{lstlisting}[language=Bash]
+./prismAId_windows_amd64.exe -init
+\end{lstlisting}
+\end{commandbox}
+
+This prompts the user multiple questions and generates a configuration file.\reminder{Always keep a backup of your configuration file before making major modifications.}
+
+\begin{configbox}[Configuration: Example of Initial Sections of a Configuration]
+To configure \texttt{prismAId}, edit the generated \texttt{your\_project.toml} file:
+\begin{lstlisting}[language=TOML]
+[project]
+name = "Use of LLM for systematic review"
+author = "John Doe"
+version = "1.0"
+
+[project.configuration]
+input_directory = "/path/to/txt/files"
+input_conversion = ""
+results_file_name = "/path/to/save/results"
+output_format = "json"
+log_level = "low"
+duplication = "no"
+cot_justification = "no"
+summary = "no"
+\end{lstlisting}
+\end{configbox}
+
+\section{Verifying the Installation}
+
+Check if \texttt{prismAId} is correctly installed:\note{If you encounter issues, refer to the troubleshooting section or seek help from the community.}
+
+\begin{commandbox}[Command: Verifying Installation]
+\begin{lstlisting}[language=Bash]
+./prismAId_windows_amd64.exe --version
+\end{lstlisting}
+\end{commandbox}
+
+\section{Conclusion}
+
+You have now installed \texttt{prismAId} and completed the first-time setup. The next chapter will guide you through configuring your project.
+
+
+\chapter{Configuring prismAId} 
+\label{chap:config}
+
+\texttt{prismAId} requires a configuration file to define project settings, data sources, and review parameters. This chapter explains how to initialize, modify, and understand the configuration file.
+
+\section{Initializing a Configuration File}
+
+Users can create a configuration file in two ways:
+
+\subsection{Terminal-Based Initialization}
+
+From the command line, run:
+
+\begin{commandbox}[Command: Initialize a new configuration file]
+\begin{lstlisting}[language=Bash]
+./prismAId_windows_amd64.exe -init
+\end{lstlisting}
+\end{commandbox}
+\reminder{A configuration template is also provided in the repository for reference.}
+This interactively generates a `.toml` configuration file based on user preferences.
+
+\subsection{Web-Based Initialization}
+
+\texttt{prismAId} provides a web-based interface to generate configuration files. Navigate to the a browser-based interface at \href{https://open-and-sustainable.github.io/prismaid/review-configurator.html}{open-and-sustainable.github.io/prismaid/review-configurator.html}, fill in the details interactively, and download or copy the configuration file generated.
+
+\section{Understanding the Configuration File}
+
+The configuration file is structured into sections, each controlling different aspects of \texttt{prismAId}. Below is a breakdown of its components.
+
+\subsection{Project Information}
+
+\begin{configbox}[Configuration: Project Metadata]
+\begin{lstlisting}[language=TOML]
+[project]
+name = "Use of LLM for systematic review"
+author = "John Doe"
+version = "1.0"
+\end{lstlisting}
+\end{configbox}
+
+\textbf{Entries:}
+\begin{itemize}
+    \item \texttt{name} – Title of the project.
+    \item \texttt{author} – Name of the person managing the review.
+    \item \texttt{version} – Configuration file version.
+\end{itemize}
+
+\subsection{Project Configuration}
+
+\begin{configbox}[Configuration: General Settings]
+\begin{lstlisting}[language=TOML]
+[project.configuration]
+input_directory = "/path/to/txt/files"
+input_conversion = "pdf,docx"
+results_file_name = "/path/to/save/results"
+output_format = "json"
+log_level = "low"
+duplication = "no"
+cot_justification = "no"
+summary = "no"
+\end{lstlisting}
+\end{configbox}
+
+\textbf{Entries:}
+\begin{itemize}
+    \item \texttt{input\_directory} – Path to manuscript files for review.
+    \item \texttt{input\_conversion} – File types to be converted (`pdf`, `docx`, etc.).
+    \item \texttt{results\_file\_name} – Path for storing output files.
+    \item \texttt{output\_format} – Format for results (`csv` or `json`).
+    \item \texttt{log\_level} – Logging level (`low`, `medium`, `high`).
+    \item \texttt{duplication} – Whether to duplicate manuscripts for debugging (`yes` or `no`).
+    \item \texttt{cot\_justification} – Whether to store model justification (`yes` or `no`).
+    \item \texttt{summary} – Whether to generate summaries (`yes` or `no`).
+\end{itemize}
+
+\subsection{Zotero Integration (Optional)}
+
+\begin{configbox}[Configuration: Zotero Settings]
+\begin{lstlisting}[language=TOML]
+[project.zotero]
+user = ""
+api_key = ""
+group = ""
+\end{lstlisting}
+\end{configbox}
+
+\textbf{Entries:}
+\begin{itemize}
+    \item \texttt{user} – Zotero user ID.
+    \item \texttt{api\_key} – API key for accessing Zotero.
+    \item \texttt{group} – Collection or group name in Zotero.
+\end{itemize}
+
+\subsection{LLM Model Configuration}
+
+\texttt{prismAId} supports multiple LLM providers.
+
+\begin{configbox}[Configuration: LLM Settings]
+\begin{lstlisting}[language=TOML]
+[project.llm.1]
+provider = "OpenAI"
+api_key = ""
+model = "gpt-4o-mini"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+\end{lstlisting}
+\end{configbox}
+
+\textbf{Entries:}
+\begin{itemize}
+    \item \texttt{provider} – LLM provider (`OpenAI`, `GoogleAI`, `Cohere`, or `Anthropic`).
+    \item \texttt{api\_key} – API key for authentication.
+    \item \texttt{model} – Model name (varies by provider).
+    \item \texttt{temperature} – Controls randomness (`0-1`, or `0-2` for GoogleAI).
+    \item \texttt{tpm\_limit} – Tokens per minute limit (`0` for no limit).
+    \item \texttt{rpm\_limit} – Requests per minute limit (`0` for no limit).
+\end{itemize}
+
+\subsection{Prompt Configuration}
+
+\begin{configbox}[Configuration: Prompt Structure]
+\begin{lstlisting}[language=TOML]
+[prompt]
+persona = "You are an experienced scientist..."
+task = "You are asked to map concepts in a paper."
+expected_result = "Output a JSON object with..."
+definitions = "'Interest rate' is defined as..."
+example = ""
+failsafe = "If concepts are unclear, return ''"
+\end{lstlisting}
+\end{configbox}
+
+\textbf{Entries:}
+\begin{itemize}
+    \item \texttt{persona} – Role the model should assume.
+    \item \texttt{task} – Description of the model’s job.
+    \item \texttt{expected\_result} – Defines expected output structure.
+    \item \texttt{definitions} – Key concept definitions.
+    \item \texttt{example} – Example cases (optional).
+    \item \texttt{failsafe} – How the model should handle uncertainty.
+\end{itemize}
+
+\subsection{Review Structure}
+
+\begin{configbox}[Configuration: Review Key-Value Structure]
+\begin{lstlisting}[language=TOML]
+[review.1]
+key = "interest rate"
+values = [""]
+[review.2]
+key = "regression models"
+values = ["yes", "no"]
+\end{lstlisting}
+\end{configbox}
+
+\textbf{Entries:}
+\begin{itemize}
+    \item \texttt{key} – Topic being analyzed.
+    \item \texttt{values} – Possible values for each key.
+\end{itemize}
+
+\section{Conclusion}
+
+The configuration file defines every aspect of a \texttt{prismAId} project. Users have no need to define or modify anything else. 
+
+Users can modify settings manually starting from the provided template, or use the web configurator or the terminal-based one for an interactive setup.
+

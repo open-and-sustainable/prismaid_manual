@@ -1,0 +1,68 @@
+\chapter*{Foreword}
+\addcontentsline{toc}{chapter}{Foreword}
+
+The \texttt{prismAId} user manual is designed to help researchers, academics, and professionals leverage the power of \texttt{prismAId} for conducting systematic reviews efficiently.\reminder{No coding skills are required to effectively conduct a systematic review with \texttt{prismAId}.} This document provides a structured approach to installing, configuring, and using \texttt{prismAId}, ensuring that users can quickly get started while also exploring advanced features when needed.
+
+This manual is divided into five distinct parts, each catering to different user needs:
+
+\begin{itemize}
+    \item \textbf{Part 1: Introduction}\tip{The many open science advantages of \texttt{prismAId} are introduced and discussed in the \secref{chap:intro}{\textbf{Introduction}}.} – If you are new to \texttt{prismAId}, we recommend starting with the chapter \secref{chap:intro}{\textbf{Introduction to prismAId}}. This section explains what \texttt{prismAId} is, who can benefit from it, and why it is a valuable tool for systematic reviews.
+    
+    \item \textbf{Part 2: Getting Started}\note{\texttt{prismAId} is available on all platforms and operating systems. It can also be integrated programmatically with the most widely used scientific software.} – If you need to install and configure \texttt{prismAId}, go directly to \secref{chap:install}{\textbf{Installation \& Setup}}. This section provides step-by-step installation instructions for Windows, Mac, and Linux. Once installed, \secref{chap:config}{\textbf{Configuring prismAId}} explains how to customize settings and prepare your environment for use.
+    
+    \item \textbf{Part 3: Conducting a Systematic Review}\tip{For a quick but complete walkthrough on using \texttt{prismAId} in a systematic review, see the \secref{chap:walkthrough}{\textbf{fifth}} chapter.} – If your primary goal is to \textbf{learn how to conduct a systematic review with \texttt{prismAId}}, you can skip the installation and configuration sections and go directly to the chapter \secref{chap:walkthrough}{\textbf{Step-by-Step Guide to Conducting a Systematic Review}}. This section provides a hands-on walkthrough of:
+    \begin{itemize}
+        \item Setting up a project
+        \item Importing and managing data
+        \item Running analyses
+        \item Interpreting results
+        \item Exporting findings
+    \end{itemize}
+    Before diving into this walkthrough, you may find it helpful to read \secref{chap:sysrev}{\textbf{Understanding Systematic Reviews}}, which provides background information on the methodology and best practices.
+
+    \item \textbf{Part 4: Advanced Features} – Users who want to explore advanced capabilities can refer to the chapters \secref{chap:advanced}{\textbf{Customization and Automation}} and \secref{chap:extending}{\textbf{Extending prismAId}}. These sections cover automation, advanced filtering, and integration with external tools.
+    
+    \item \textbf{Part 5: Troubleshooting \& FAQs} – If you encounter issues, visit \secref{chap:troubleshooting}{\textbf{Troubleshooting Common Issues}}, which provides solutions to common errors, and \secref{chap:faq}{\textbf{Frequently Asked Questions}}, which addresses common concerns.
+\end{itemize}
+
+\section*{How Should You Use This Manual?}
+\addcontentsline{toc}{section}{How Should You Use This Manual?}
+
+\begin{itemize}
+    \item If you are \textbf{new to \texttt{prismAId}}, start with \secref{chap:intro}{\textbf{Introduction}}, then proceed to \secref{chap:install}{\textbf{Installation}}.
+    \item If you \textbf{want to conduct a systematic review}, go directly to \textbf{Part 3}, particularly \secref{chap:walkthrough}{\textbf{Step-by-Step Guide to Conducting a Systematic Review}}, for a detailed walkthrough.
+    \item If you need \textbf{advanced features or troubleshooting}, refer to \textbf{Parts 4 and 5} as needed.
+\end{itemize}
+
+Throughout this manual, useful commands are presented in blue boxes, as shown below:
+
+\begin{commandbox}[Command: Example of a Binary Command]
+To start the program, run:
+\begin{lstlisting}[language=Bash]
+# For Windows
+./prismAId_windows_amd64.exe -project your_project.toml
+\end{lstlisting}
+\end{commandbox}
+
+Tool configuration details are highlighted in red boxes, as shown below:
+
+\begin{configbox}[Configuration: Example of a TOML Setting]
+To configure the LLM temperature setting, edit:
+\begin{lstlisting}[language=TOML]
+# Sample TOML configuration
+[project.llm.1]
+provider = "OpenAI"
+model = ""
+temperature = 0.2
+\end{lstlisting}
+\end{configbox}
+
+
+\section*{Final Notes}
+\addcontentsline{toc}{section}{Final Notes}
+
+We hope this manual serves as a comprehensive guide to making the most of \texttt{prismAId}\warning{The online documentation of \texttt{prismAId} is available at \href{https://open-and-sustainable.github.io/prismaid/}{open-and-sustainable.github.io/prismaid/}.}. Whether you're a first-time user or an advanced researcher, this document is structured to help you get the information you need quickly and efficiently.
+  
+
+For any additional questions, please refer to \secref{chap:faq}{the FAQ section} or contact our support team. Happy reviewing!
+
