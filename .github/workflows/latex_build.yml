@@ -2,8 +2,8 @@ name: Build LaTeX PDFs
 
 on:
   push:
-    branches:
-      - main  # Run workflow on pushes to 'main'
+    tags:
+      - "v*"  # Run only when a version tag is pushed (e.g., v1.0.0)
 
 jobs:
   build:
@@ -16,6 +16,8 @@ jobs:
       # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensure we get all tags
 
       # Step 2: Determine the latest Git tag (fallback to v0.0.0 if none exists)
       - name: Get latest Git tag
@@ -25,6 +27,7 @@ jobs:
           TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
           echo "Latest tag: $TAG"
           echo "$TAG" > version.tex
+          echo "VERSION=$TAG" >> $GITHUB_ENV  # Save for later steps
 
       # Step 3: Compile the LaTeX file with XeLaTeX
       - name: Compile Manual to PDF
@@ -32,32 +35,23 @@ jobs:
           xelatex -interaction=nonstopmode prismaid_manual.tex
           xelatex -interaction=nonstopmode prismaid_manual.tex  # Run twice for cross-references
 
-      # Step 4: Mark the repository as safe for Git
-      - name: Mark directory as safe for Git
-        run: git config --global --add safe.directory /__w/prismaid_manual/prismaid_manual
+      # Step 4: Upload PDF as a Release Asset (only on versioned releases)
+      - name: Upload PDF to GitHub Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: prismaid_manual.pdf
+          tag_name: ${{ env.VERSION }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Step 5: Stash uncommitted changes (PDFs and version file)
-      - name: Stash uncommitted changes
-        run: git stash --include-untracked
-
-      # Step 6: Fetch latest changes and rebase
-      - name: Fetch and Rebase
-        run: |
-          git fetch origin
-          git pull --rebase origin main
-
-      # Step 7: Pop the stashed changes (restore the PDFs)
-      - name: Pop stashed changes
-        run: git stash pop || echo "No stashed changes to pop"
-
-      # Step 8: Commit and push the PDFs and version file back to the repository
+      # Step 5: Commit and push the updated PDF and version file (only if a tag was pushed)
       - name: Commit and Push PDFs
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
           git add prismaid_manual.pdf version.tex
-          git diff --cached --quiet || git commit -m "Update PDFs and version info"
+          git diff --cached --quiet || git commit -m "Update PDFs and version info for $VERSION"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
