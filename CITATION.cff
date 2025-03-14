@@ -8,8 +8,13 @@ authors:
     orcid: "0000-0002-7468-9096"
     affiliation: NILU
 type: dataset
+doi: 10.5281/zenodo.15025694
 repository-code: "https://github.com/open-and-sustainable/prismaid_manual"
 url: "https://open-and-sustainable.github.io/prismaid_manual/"
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.15025694
+    description: This DOI represents all manual versions.
 abstract: >-
   prismAId (Open Science AI Tools for Systematic, Protocol-Based Literature Reviews) uses generative AI models to extract data from scientific literature. It offers simple-to-use, efficient, and replicable methods for analyzing literature when conducting systematic reviews. This manual explains how to install, configure, and use prismAId for systematic reviews.
 keywords:
