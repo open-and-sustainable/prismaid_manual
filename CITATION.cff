@@ -14,7 +14,7 @@ url: "https://open-and-sustainable.github.io/prismaid_manual/"
 identifiers:
   - type: doi
     value: 10.5281/zenodo.15025694
-    description: This DOI represents all manual versions.
+    description: "This DOI represents all manual versions."
   - type: url
     value: "https://github.com/open-and-sustainable/prismaid_manual/releases/latest/download/prismaid_manual.pdf"
     description: "Direct link to the latest PDF version of the manual."
