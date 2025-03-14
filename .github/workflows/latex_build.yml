@@ -51,6 +51,11 @@ jobs:
       - name: Pop stashed changes
         run: git stash pop || echo "No stashed changes to pop"
 
+      - name: Switch to Main Branch
+        run: |
+          git checkout main
+          git pull --rebase origin main  # Ensure the latest changes are in sync
+
       # Step 8: Commit and push the PDFs and version file back to the repository
       - name: Commit and Push PDFs
         run: |
