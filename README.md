@@ -1,14 +1,11 @@
-# prismAId User Manual ��
+# prismAId User Manual 📖
 
 Welcome to the **prismAId User Manual**! This guide explains how to install, configure, and use prismAId for systematic reviews.
 
-## �� View Online
-[![View PDF](https://img.shields.io/badge/View-PDF-red)](https://docs.google.com/gview?url=https://github.com/open-and-sustainable/prismaid_manual/raw/main/prismaid_manual.pdf&embedded=true)
+## 📄 Download the Latest Manual
+👉 **[Click here to download the latest PDF](https://github.com/open-and-sustainable/prismaid_manual/raw/main/prismaid_manual.pdf)**  
 
-## �� Download the Latest Manual
-�� **[Click here to download the latest PDF](https://github.com/open-and-sustainable/prismaid_manual/raw/main/prismaid_manual.pdf)**  
-
-## �� Table of Contents
+## 📚 Table of Contents
 - Foreword
 - **PART I INTRODUCTION**
 - Introduction to prismAId
