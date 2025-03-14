@@ -8,6 +8,7 @@ authors:
     email: ribo@nilu.no
     orcid: 'https://orcid.org/0000-0002-7468-9096'
     affiliation: NILU
+type: manual
 identifiers:
   - type: doi
     description: This DOI represents all manual versions.
