@@ -1,8 +1,1171 @@
-\chapter{Customization and Automation} \label{chap:advanced}
-- Customizing settings  
-- Using automation  
-- Advanced filtering  
+\chapter{Advanced Features: Ensemble Reviews} \label{chap:advanced_ensemble}
 
-\chapter{Extending prismAId} \label{chap:extending}
-- Integrating with other tools  
-- Writing custom scripts  
+This chapter explores ensemble reviews, one of the most powerful advanced features of \texttt{prismAId}, enabling users to leverage multiple AI models simultaneously for enhanced reliability and insight.
+
+\section{Understanding Ensemble Reviews}
+
+Ensemble reviews represent a sophisticated approach to systematic literature analysis where multiple large language models (LLMs) are used to extract information from the same document set. This methodology parallels the traditional practice of having multiple human reviewers assess the same literature.
+
+\subsection{Concept and Benefits}
+
+\begin{itemize}
+    \item \textbf{Definition}: An ensemble review utilizes two or more AI models, either from the same provider or across different providers, to independently extract information from each document.
+    \item \textbf{Theoretical Foundation}: The approach is grounded in ensemble learning theory, where multiple algorithms collectively produce more accurate and robust results than individual algorithms.
+\end{itemize}
+
+\tip{Ensemble reviews are particularly valuable when conducting high-stakes systematic reviews where accuracy and reliability are critical, such as in clinical guideline development or policy formation.}
+
+\begin{configbox}[Configuration: Simple Ensemble with Two Models]
+\begin{lstlisting}[language=TOML]
+[project.llm.1]
+provider = "OpenAI"
+api_key = ""
+model = "gpt-4o-mini"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+
+[project.llm.2]
+provider = "OpenAI"
+api_key = ""
+model = "gpt-4o"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+\end{lstlisting}
+\end{configbox}
+
+\subsection{Key Advantages}
+
+Ensemble reviews offer several significant benefits:
+
+\begin{itemize}
+    \item \textbf{Uncertainty Quantification}: Variations in model outputs highlight where information may be ambiguous or open to interpretation.
+    \item \textbf{Increased Confidence}: Strong agreement across models suggests higher reliability of the extracted information.
+    \item \textbf{Bias Reduction}: Different models may have different biases; using multiple models helps identify and mitigate these biases.
+    \item \textbf{Robustness to Model Limitations}: Different models excel at different tasks; using multiple models compensates for individual weaknesses.
+\end{itemize}
+
+\note{Research in AI-assisted systematic reviews suggests that ensemble approaches can reduce error rates by 20-30\% compared to single-model extractions, particularly for complex or ambiguous information.}
+
+\section{Configuring Multi-Model Ensembles}
+
+\texttt{prismAId} offers exceptional flexibility in configuring ensemble reviews, allowing you to combine models from the same provider, different providers, or a mix of both.
+
+\subsection{Using Multiple Models from a Single Provider}
+
+This approach allows you to compare different models with varying capabilities from the same provider:
+
+\begin{configbox}[Configuration: Ensemble with Multiple OpenAI Models]
+\begin{lstlisting}[language=TOML]
+[project.llm.1]
+provider = "OpenAI"
+api_key = ""
+model = "gpt-3.5-turbo"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+
+[project.llm.2]
+provider = "OpenAI"
+api_key = ""
+model = "gpt-4o-mini"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+
+[project.llm.3]
+provider = "OpenAI"
+api_key = ""
+model = "gpt-4o"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+\end{lstlisting}
+\end{configbox}
+
+\tip{When using multiple models from the same provider, consider including a range of model sizes to balance cost, speed, and accuracy. For example, include both gpt-3.5-turbo and gpt-4o to compare a faster, more economical model with a more sophisticated one.}
+
+\subsection{Cross-Provider Ensemble Configuration}
+
+Using models from different providers can be particularly valuable, as these models may have been trained on different datasets and using different architectures:
+
+\begin{configbox}[Configuration: Cross-Provider Ensemble Example]
+\begin{lstlisting}[language=TOML]
+[project.llm.1]
+provider = "OpenAI"
+api_key = ""
+model = "gpt-4o-mini"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+
+[project.llm.2]
+provider = "GoogleAI"
+api_key = ""
+model = "gemini-1.5-flash"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+
+[project.llm.3]
+provider = "Anthropic"
+api_key = ""
+model = "claude-3-haiku"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+\end{lstlisting}
+\end{configbox}
+
+\warning{When using models from multiple providers, ensure you have valid API keys for each provider configured either in your TOML file or as environment variables. Missing or invalid keys will cause the review to fail for that provider.}
+
+\subsection{Comprehensive Five-Provider Ensemble}
+
+For maximum diversity and robustness, you can configure an ensemble using models from all supported providers:
+
+\begin{configbox}[Configuration: Full Five-Provider Ensemble]
+\begin{lstlisting}[language=TOML]
+[project.llm.1]
+provider = "OpenAI"
+api_key = ""
+model = "gpt-4o-mini"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+
+[project.llm.2]
+provider = "GoogleAI"
+api_key = ""
+model = "gemini-1.5-flash"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+
+[project.llm.3]
+provider = "Cohere"
+api_key = ""
+model = "command-r"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+
+[project.llm.4]
+provider = "Anthropic"
+api_key = ""
+model = "claude-3-haiku"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+
+[project.llm.5]
+provider = "DeepSeek"
+api_key = ""
+model = "deepseek-chat"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+\end{lstlisting}
+\end{configbox}
+
+\reminder{Pay close attention to the temperature settings in ensemble reviews. Lower temperatures (0.01-0.1) produce more deterministic outputs, making it easier to compare responses across models.}
+
+\section{Analyzing Ensemble Results}
+
+After running an ensemble review, you'll need specialized approaches to analyze and interpret the results from multiple models.
+
+\subsection{Output Format and Structure}
+
+When running an ensemble review, \texttt{prismAId} creates separate result files for each model used:
+
+\begin{commandbox}[Example Output Files from Ensemble Review]
+\begin{lstlisting}
+results_OpenAI_gpt-4o-mini.csv
+results_GoogleAI_gemini-1.5-flash.csv
+results_Anthropic_claude-3-haiku.csv
+results_ensemble_summary.csv
+\end{lstlisting}
+\end{commandbox}
+
+The individual model files contain the standard extraction results, while the ensemble summary file contains consensus metrics and comparison data.
+
+\subsection{Quantifying Model Agreement}
+
+To analyze the level of agreement between models:
+
+\begin{commandbox}[R Code for Analyzing Model Agreement]
+\begin{lstlisting}[language=R]
+library(tidyverse)
+
+# Load results from different models
+model1 <- read_csv("results_OpenAI_gpt-4o-mini.csv")
+model2 <- read_csv("results_GoogleAI_gemini-1.5-flash.csv")
+model3 <- read_csv("results_Anthropic_claude-3-haiku.csv")
+
+# Join datasets
+comparison <- model1 %>%
+  select(filename, crop_type, climate_factor) %>%
+  rename(crop_type_model1 = crop_type,
+         climate_factor_model1 = climate_factor) %>%
+  left_join(
+    model2 %>%
+      select(filename, crop_type, climate_factor) %>%
+      rename(crop_type_model2 = crop_type,
+             climate_factor_model2 = climate_factor),
+    by = "filename"
+  ) %>%
+  left_join(
+    model3 %>%
+      select(filename, crop_type, climate_factor) %>%
+      rename(crop_type_model3 = crop_type,
+             climate_factor_model3 = climate_factor),
+    by = "filename"
+  )
+
+# Calculate agreement for categorical variables
+comparison <- comparison %>%
+  mutate(
+    crop_type_agreement = case_when(
+      crop_type_model1 == crop_type_model2 & crop_type_model2 == crop_type_model3 ~ "full_agreement",
+      crop_type_model1 == crop_type_model2 | crop_type_model1 == crop_type_model3 | crop_type_model2 == crop_type_model3 ~ "partial_agreement",
+      TRUE ~ "no_agreement"
+    ),
+    climate_factor_agreement = case_when(
+      climate_factor_model1 == climate_factor_model2 & climate_factor_model2 == climate_factor_model3 ~ "full_agreement",
+      climate_factor_model1 == climate_factor_model2 | climate_factor_model1 == climate_factor_model3 | climate_factor_model2 == climate_factor_model3 ~ "partial_agreement",
+      TRUE ~ "no_agreement"
+    )
+  )
+
+# Summarize agreement levels
+agreement_summary <- comparison %>%
+  summarize(
+    crop_type_full_agreement = mean(crop_type_agreement == "full_agreement"),
+    crop_type_partial_agreement = mean(crop_type_agreement == "partial_agreement"),
+    crop_type_no_agreement = mean(crop_type_agreement == "no_agreement"),
+    climate_factor_full_agreement = mean(climate_factor_agreement == "full_agreement"),
+    climate_factor_partial_agreement = mean(climate_factor_agreement == "partial_agreement"),
+    climate_factor_no_agreement = mean(climate_factor_agreement == "no_agreement")
+  )
+
+print(agreement_summary)
+\end{lstlisting}
+\end{commandbox}
+
+\tip{For categorical variables, Cohen's kappa or Fleiss' kappa (for more than two models) can provide a more sophisticated measure of inter-model agreement than simple percentage agreement.}
+
+\subsection{Visualizing Ensemble Results}
+
+Visualizations can help identify patterns of agreement and disagreement:
+
+\begin{commandbox}[Python Code for Visualizing Ensemble Agreement]
+\begin{lstlisting}[language=Python]
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load results from different models
+model1 = pd.read_csv("results_OpenAI_gpt-4o-mini.csv")
+model2 = pd.read_csv("results_GoogleAI_gemini-1.5-flash.csv")
+model3 = pd.read_csv("results_Anthropic_claude-3-haiku.csv")
+
+# Create comparison dataframe for a specific variable
+comparison = pd.DataFrame({
+    'filename': model1['filename'],
+    'OpenAI': model1['crop_type'],
+    'GoogleAI': model2['crop_type'],
+    'Anthropic': model3['crop_type']
+})
+
+# Count agreements for each paper
+comparison['agreement_count'] = comparison.apply(
+    lambda row: len(set([row['OpenAI'], row['GoogleAI'], row['Anthropic']])),
+    axis=1
+)
+
+# Create a heatmap of disagreements
+# Convert to wide format with models as columns and papers as rows
+heatmap_data = comparison.set_index('filename')[['OpenAI', 'GoogleAI', 'Anthropic']]
+
+# Create categorical mapping for visualization
+unique_values = sorted(list(set(
+    heatmap_data['OpenAI'].tolist() +
+    heatmap_data['GoogleAI'].tolist() +
+    heatmap_data['Anthropic'].tolist()
+)))
+value_map = {value: i for i, value in enumerate(unique_values)}
+
+# Apply mapping
+for col in heatmap_data.columns:
+    heatmap_data[col] = heatmap_data[col].map(value_map)
+
+# Create heatmap
+plt.figure(figsize=(12, len(heatmap_data) * 0.3))
+sns.heatmap(heatmap_data, cmap='viridis', yticklabels=True)
+plt.title('Model Agreement Visualization (Crop Type)')
+plt.tight_layout()
+plt.savefig('ensemble_agreement_heatmap.png', dpi=300)
+
+# Create agreement distribution chart
+agreement_counts = comparison['agreement_count'].value_counts().sort_index()
+plt.figure(figsize=(10, 6))
+agreement_counts.plot(kind='bar')
+plt.title('Distribution of Model Agreement')
+plt.xlabel('Number of Unique Answers (1 = Full Agreement)')
+plt.ylabel('Number of Papers')
+plt.tight_layout()
+plt.savefig('agreement_distribution.png', dpi=300)
+\end{lstlisting}
+\end{commandbox}
+
+\note{For numerical data extraction (like percentages or measurements), consider using scatterplots to visualize the correlation between values extracted by different models, or boxplots to show the distribution of values across models.}
+
+\subsection{Decision Strategies for Conflicting Results}
+
+When models disagree on extracted information, several strategies can be employed:
+
+\begin{itemize}
+    \item \textbf{Majority Voting}: Use the value that the majority of models agree on.
+    \item \textbf{Weighted Voting}: Assign higher weight to more capable models (e.g., GPT-4 over GPT-3.5).
+    \item \textbf{Conservative Approach}: For papers with significant disagreement, flag for manual review.
+    \item \textbf{Model-Specific Trust}: For certain types of information, one model may consistently outperform others.
+\end{itemize}
+
+\begin{commandbox}[Python Code for Majority Voting]
+\begin{lstlisting}[language=Python]
+import pandas as pd
+from collections import Counter
+
+# Load results from different models
+model1 = pd.read_csv("results_OpenAI_gpt-4o-mini.csv")
+model2 = pd.read_csv("results_GoogleAI_gemini-1.5-flash.csv")
+model3 = pd.read_csv("results_Anthropic_claude-3-haiku.csv")
+
+# Prepare a consolidated results dataframe
+consolidated = pd.DataFrame({'filename': model1['filename']})
+
+# Apply majority voting for each extracted field
+for field in ['crop_type', 'climate_factor', 'adaptation_strategies_discussed']:
+    consolidated[field] = [
+        Counter([m1, m2, m3]).most_common(1)[0][0]
+        for m1, m2, m3 in zip(
+            model1[field].fillna(''),
+            model2[field].fillna(''),
+            model3[field].fillna('')
+        )
+    ]
+
+    # For fields where all models disagree, mark for review
+    consolidated[f'{field}_review_needed'] = [
+        len(set([m1, m2, m3])) == 3
+        for m1, m2, m3 in zip(
+            model1[field].fillna(''),
+            model2[field].fillna(''),
+            model3[field].fillna('')
+        )
+    ]
+
+# For numerical fields, take the median
+for field in ['yield_impact_percentage']:
+    try:
+        # Convert to numeric, errors='coerce' will convert non-numeric to NaN
+        vals1 = pd.to_numeric(model1[field], errors='coerce')
+        vals2 = pd.to_numeric(model2[field], errors='coerce')
+        vals3 = pd.to_numeric(model3[field], errors='coerce')
+
+        # Calculate median
+        consolidated[field] = [
+            pd.Series([v1, v2, v3]).median()
+            for v1, v2, v3 in zip(vals1, vals2, vals3)
+        ]
+
+        # Calculate standard deviation to identify high variance
+        consolidated[f'{field}_std'] = [
+            pd.Series([v1, v2, v3]).std()
+            for v1, v2, v3 in zip(vals1, vals2, vals3)
+        ]
+
+        # Flag for review if standard deviation is high
+        consolidated[f'{field}_review_needed'] = consolidated[f'{field}_std'] > 2.0
+    except:
+        # Handle cases where the field might not exist or can't be processed
+        pass
+
+# Save consolidated results
+consolidated.to_csv("results_consolidated.csv", index=False)
+\end{lstlisting}
+\end{commandbox}
+
+\warning{Be cautious when using majority voting for numerical values, as this may lead to misleading results. For numerical data, consider using the median or mean, and examine the standard deviation to identify high-variance cases.}
+
+\section{Case Studies in Ensemble Reviews}
+
+To illustrate the practical application of ensemble reviews, let's examine some case scenarios and best practices.
+
+\subsection{Case 1: Basic Verification Ensemble}
+
+\begin{configbox}[Configuration: Verification Ensemble]
+\begin{lstlisting}[language=TOML]
+# A simple two-model ensemble using different providers
+# for basic verification of extraction results
+
+[project.llm.1]
+provider = "OpenAI"
+api_key = ""
+model = "gpt-3.5-turbo"  # More economical option
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+
+[project.llm.2]
+provider = "Anthropic"
+api_key = ""
+model = "claude-3-haiku"  # Similar capability level
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+\end{lstlisting}
+\end{configbox}
+
+\textbf{Use Case}: This configuration is suitable for routine systematic reviews where you want a basic cross-check between providers without significantly increasing costs. It uses comparably efficient models from different providers.
+
+\textbf{Expected Outcome}: When these models agree, you can have higher confidence in the extraction. When they disagree, you might flag those specific data points for manual review.
+
+\subsection{Case 2: Tiered Capability Ensemble}
+
+\begin{configbox}[Configuration: Tiered Capability Ensemble]
+\begin{lstlisting}[language=TOML]
+# A three-model ensemble using progressively more capable models
+# from the same provider for comparative analysis
+
+[project.llm.1]
+provider = "OpenAI"
+api_key = ""
+model = "gpt-3.5-turbo"  # Base level
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+
+[project.llm.2]
+provider = "OpenAI"
+api_key = ""
+model = "gpt-4o-mini"  # Mid level
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+
+[project.llm.3]
+provider = "OpenAI"
+api_key = ""
+model = "gpt-4o"  # Top level
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+\end{lstlisting}
+\end{configbox}
+
+\textbf{Use Case}: This approach is useful for understanding how model capability affects extraction quality. It can help determine if investing in more advanced models provides meaningful improvements for your specific extraction tasks.
+
+\textbf{Expected Outcome}: By comparing results across models of increasing capability, you can determine the minimum model level needed for reliable extraction, potentially optimizing future costs.
+
+\subsection{Case 3: Comprehensive Cross-Provider Ensemble}
+
+\begin{configbox}[Configuration: Comprehensive Cross-Provider Ensemble]
+\begin{lstlisting}[language=TOML]
+# A five-provider ensemble using top-tier models from each provider
+# for maximum reliability in high-stakes reviews
+
+[project.llm.1]
+provider = "OpenAI"
+api_key = ""
+model = "gpt-4o"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+
+[project.llm.2]
+provider = "GoogleAI"
+api_key = ""
+model = "gemini-1.5-pro"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+
+[project.llm.3]
+provider = "Cohere"
+api_key = ""
+model = "command-r-plus"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+
+[project.llm.4]
+provider = "Anthropic"
+api_key = ""
+model = "claude-3-opus"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+
+[project.llm.5]
+provider = "DeepSeek"
+api_key = ""
+model = "deepseek-chat"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+\end{lstlisting}
+\end{configbox}
+
+\textbf{Use Case}: This configuration is ideal for high-stakes systematic reviews such as those informing clinical guidelines, policy decisions, or major meta-analyses where maximum reliability is essential.
+
+\textbf{Expected Outcome}: This approach provides the highest confidence in results through diverse model architectures and training data. Points of unanimous agreement across all five providers suggest very high reliability.
+
+\tip{Start with a small test dataset when using comprehensive ensembles like this to estimate costs and review time before committing to your full dataset.}
+
+\subsection{Best Practices for Ensemble Reviews}
+
+Based on case studies and practical experience, here are recommended best practices:
+
+\begin{itemize}
+    \item \textbf{Start Small}: Test your ensemble configuration on a small subset (5-10 papers) to identify any issues before running the full review.
+    \item \textbf{Match Complexity to Need}: Use simpler ensembles for routine reviews and more comprehensive ensembles for high-stakes reviews.
+    \item \textbf{Control Variables}: Keep temperature settings consistent across models to ensure fair comparisons.
+    \item \textbf{Budget Appropriately}: Ensemble reviews will multiply your API costs by the number of models used; plan accordingly.
+    \item \textbf{Document Model Versions}: Note the specific model versions used, as providers regularly update their models.
+    \item \textbf{Analyze Disagreements}: Patterns in model disagreements often reveal ambiguities in your prompt or in the literature itself.
+\end{itemize}
+
+\reminder{When reporting results from ensemble reviews in publications, clearly state which models were used, how disagreements were resolved, and what level of agreement was observed for key findings.}
+
+\chapter{Advanced Features: Debugging, Cost Management \& Integration} \label{chap:advanced_features}
+
+Building on our exploration of ensemble reviews, this chapter covers additional advanced features of \texttt{prismAId} that can enhance your systematic review process: debugging techniques, cost management strategies, advanced prompt engineering, and workflow integration.
+
+\section{Debugging and Validation Techniques}
+
+\texttt{prismAId} offers several advanced debugging features that can help identify and resolve issues in your systematic review process.
+
+\subsection{Log Levels and Debugging Output}
+
+The \texttt{log\_level} parameter in your configuration file controls the verbosity of debugging information:
+
+\begin{configbox}[Configuration: Log Level Settings]
+\begin{lstlisting}[language=TOML]
+[project.configuration]
+log_level = "high"  # Options: "low", "medium", "high"
+\end{lstlisting}
+\end{configbox}
+
+Each level provides different information:
+\begin{itemize}
+    \item \textbf{Low}: Minimal information, only essential status updates
+    \item \textbf{Medium}: Detailed process information printed to the console
+    \item \textbf{High}: Comprehensive logs saved to a file, including all API interactions
+\end{itemize}
+
+\tip{When troubleshooting issues, start by setting the log level to "medium" to get more detailed console output. If the issue persists, switch to "high" for complete logging to file.}
+
+\begin{commandbox}[Command: Running with High Log Level]
+\begin{lstlisting}[language=Bash]
+# First set log_level to "high" in your config file
+./prismaid -project your_project.toml
+
+# Check the log file created in your project directory
+cat prismaid_log_YYYY-MM-DD.log
+\end{lstlisting}
+\end{commandbox}
+
+\subsection{Duplication for Consistency Testing}
+
+The duplication feature runs the same review twice on identical inputs, allowing you to assess the consistency of model responses:
+
+\begin{configbox}[Configuration: Enabling Duplication]
+\begin{lstlisting}[language=TOML]
+[project.configuration]
+duplication = "yes"  # Options: "yes", "no"
+\end{lstlisting}
+\end{configbox}
+
+\warning{Enabling duplication will double your API usage and costs. Use this feature selectively for testing or when consistency validation is critical.}
+
+The duplication process:
+1. Creates temporary copies of your input files
+2. Processes them as a separate batch
+3. Compares results for consistency
+4. Cleans up temporary files
+
+\begin{commandbox}[Python Code for Analyzing Duplication Results]
+\begin{lstlisting}[language=Python]
+import pandas as pd
+
+# Load original and duplicate results
+original = pd.read_csv("results_original.csv")
+duplicate = pd.read_csv("results_duplicate.csv")
+
+# Compare results
+comparison = pd.DataFrame({
+    'filename': original['filename'],
+})
+
+# For each extracted field, calculate consistency
+for field in ['crop_type', 'climate_factor', 'yield_impact']:
+    comparison[f'{field}_consistent'] = original[field] == duplicate[field]
+
+# Calculate overall consistency
+field_columns = [col for col in comparison.columns if col.endswith('_consistent')]
+comparison['overall_consistency'] = comparison[field_columns].mean(axis=1)
+
+# Summary statistics
+consistency_summary = {
+    'overall_consistency': comparison['overall_consistency'].mean(),
+}
+
+for field in field_columns:
+    consistency_summary[field] = comparison[field].mean()
+
+print("Consistency Summary:")
+for key, value in consistency_summary.items():
+    print(f"{key}: {value:.2%}")
+
+# Identify inconsistent papers
+inconsistent_papers = comparison[comparison['overall_consistency'] < 1.0]
+print(f"\nPapers with inconsistencies: {len(inconsistent_papers)}")
+print(inconsistent_papers[['filename', 'overall_consistency']])
+\end{lstlisting}
+\end{commandbox}
+
+\subsection{Chain-of-Thought Justification}
+
+The Chain-of-Thought (CoT) justification feature provides visibility into the model's reasoning process:
+
+\begin{configbox}[Configuration: Enabling CoT Justification]
+\begin{lstlisting}[language=TOML]
+[project.configuration]
+cot_justification = "yes"  # Options: "yes", "no"
+\end{lstlisting}
+\end{configbox}
+
+When enabled, this creates a separate .txt file for each processed document containing:
+\begin{itemize}
+    \item The model's reasoning for each extracted data point
+    \item Key passages from the document that influenced the extraction
+    \item Any uncertainty or alternative interpretations considered
+\end{itemize}
+
+\begin{commandbox}[Example CoT Justification Output]
+\begin{lstlisting}
+Paper: climate_impact_2022.txt
+
+Extraction Justification:
+--------------------------
+
+- crop_type: "wheat" - The paper specifically focuses on wheat production.
+  This is stated in the abstract: "This study examines the impact of
+  temperature rises on wheat yields across 17 major producing regions"
+  and is the primary crop discussed throughout.
+
+- climate_factor: "temperature increase" - The primary climate factor
+  analyzed is rising temperatures. The methodology section states:
+  "We analyzed the response of wheat yields to temperature increases
+  ranging from +1°C to +4°C." While precipitation is mentioned, it's
+  not the main focus of analysis.
+
+- yield_impact: "-5.7% per °C" - This value appears in the results
+  section: "Our models predict an average yield reduction of 5.7%
+  for each degree Celsius increase in global mean temperature."
+  This appears to be the central finding of the paper.
+
+- adaptation_strategies_discussed: "yes" - The paper includes a
+  full section on adaptation (Section 4.2), discussing options
+  including "changing planting dates, introducing heat-resistant
+  cultivars, and implementing irrigation strategies."
+
+- study_timeframe: "future projection" - The paper uses historical
+  data to calibrate models but primarily presents projections for
+  2030-2050 as stated: "We project impacts for mid-century
+  (2030-2050) under the RCP4.5 and RCP8.5 scenarios."
+\end{lstlisting}
+\end{commandbox}
+
+\tip{CoT justifications are invaluable for validating extraction quality, identifying potential misinterpretations, and understanding why models might be struggling with particular papers or information types.}
+
+\section{Cost and Rate Management}
+
+\texttt{prismAId} provides several features to help manage costs and API rate limits.
+
+\subsection{Token and Request Rate Limiting}
+
+\begin{configbox}[Configuration: Rate Limiting Settings]
+\begin{lstlisting}[language=TOML]
+[project.llm.1]
+provider = "OpenAI"
+api_key = ""
+model = "gpt-4o-mini"
+temperature = 0.01
+tpm_limit = 100000  # Tokens per minute limit
+rpm_limit = 60      # Requests per minute limit
+\end{lstlisting}
+\end{configbox}
+
+These settings help you:
+\begin{itemize}
+    \item \textbf{Avoid Provider Rate Limiting}: Stay below provider-enforced limits
+    \item \textbf{Control Costs}: Spread API usage over time to manage budget
+    \item \textbf{Balance Resource Usage}: Prevent spikes in API consumption
+\end{itemize}
+
+\note{Each provider has different rate limit structures. OpenAI limits by TPM (tokens per minute), Anthropic by RPM (requests per minute), and others may have tiered systems. Check the provider's documentation for current limits.}
+
+\begin{commandbox}[Example Provider Rate Limits]
+\begin{lstlisting}
+Provider  | Model            | Default TPM  | Default RPM
+----------|------------------|--------------|------------
+OpenAI    | gpt-3.5-turbo    | 60,000       | 3,500
+OpenAI    | gpt-4o           | 10,000       | 500
+Anthropic | claude-3-haiku   | N/A          | 5,000
+GoogleAI  | gemini-1.5-flash | 4,000,000    | N/A
+Cohere    | command-r        | 100,000      | 1,000
+\end{lstlisting}
+\end{commandbox}
+
+\warning{These limits can change as providers update their services. Always check the most recent documentation from each provider for current rate limits.}
+
+\subsection{Automatic Cost Minimization}
+
+\texttt{prismAId} can automatically select the most cost-effective model by leaving the model field empty:
+
+\begin{configbox}[Configuration: Cost Minimization]
+\begin{lstlisting}[language=TOML]
+[project.llm.1]
+provider = "OpenAI"
+api_key = ""
+model = ""  # Empty value enables automatic model selection
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+\end{lstlisting}
+\end{configbox}
+
+How automatic model selection works:
+1. \texttt{prismAId} calculates the token count for each document
+2. It determines which provider models can handle the document within token limits
+3. Among eligible models, it selects the most cost-efficient option
+4. Different documents may be processed by different models based on size
+
+\tip{Automatic model selection is particularly useful for heterogeneous document collections where some papers may be too large for smaller models.}
+
+\subsection{Estimating and Controlling Costs}
+
+To estimate the costs of your systematic review:
+
+\begin{commandbox}[Command: Dry Run with Cost Estimation]
+\begin{lstlisting}[language=Bash]
+# Set log_level to "medium" or "high" in your config
+# Run the review with a small sample of papers (3-5)
+./prismaid -project your_project.toml
+
+# Review the console output for token usage and cost estimates
+# Extrapolate to your full dataset
+\end{lstlisting}
+\end{commandbox}
+
+\begin{configbox}[Example Cost Summary Output]
+\begin{lstlisting}
+Processing completed.
+-------------------------------------
+COST SUMMARY
+-------------------------------------
+Provider: OpenAI
+Model: gpt-4o-mini
+Files processed: 5
+Total input tokens: 23,456
+Total output tokens: 2,189
+Estimated cost: $0.17
+
+Extrapolated cost for 100 files: ~$3.40
+-------------------------------------
+\end{lstlisting}
+\end{configbox}
+
+\reminder{API pricing may change over time. Always check current pricing from your providers before estimating costs for large projects.}
+
+\section{Advanced Prompt Engineering}
+
+The quality of your systematic review results largely depends on how effectively you structure your prompts. Here are advanced strategies for optimizing extraction through prompt engineering.
+
+\subsection{Optimizing Prompt Components}
+
+Each component of the prompt structure serves a specific purpose and can be optimized:
+
+\begin{configbox}[Configuration: Advanced Prompt Components]
+\begin{lstlisting}[language=TOML]
+[prompt]
+persona = "You are an expert environmental scientist specializing in climate change impacts on agriculture, with experience conducting systematic reviews according to PRISMA guidelines."
+task = "Analyze the scientific paper provided and extract specific information about climate change impacts on crop yields, methodology used, and adaptation strategies discussed."
+expected_result = "You should output a JSON object containing values for each key specified in the review structure. Values must adhere exactly to the prescribed formats and vocabulary."
+definitions = "'Crop yield' refers to harvestable production per unit of land area. 'Statistical significance' means p < 0.05 unless otherwise specified in the paper. 'Adaptation strategies' include any interventions meant to reduce negative climate impacts on agriculture."
+example = "For instance, if the paper states 'wheat yields decreased by 5.2% (p < 0.01) per degree Celsius warming, with irrigation mitigating 40% of losses', you would extract: {\"crop_type\": \"wheat\", \"climate_factor\": \"temperature increase\", \"yield_impact\": \"-5.2% per °C\", \"statistical_significance\": \"yes\", \"adaptation_strategies_discussed\": \"yes\", \"adaptation_effectiveness\": \"40% loss reduction\"}"
+failsafe = "If specific information is not clearly stated in the document, do not speculate or infer beyond reasonable scientific interpretation. Respond with an empty string for missing data. If the paper doesn't address the topic at all, use 'not addressed' for categorical fields."
+\end{lstlisting}
+\end{configbox}
+
+Key strategies for each component:
+
+\begin{itemize}
+    \item \textbf{Persona}: Include relevant expertise and methodological background to establish appropriate context.
+    \item \textbf{Task}: Be specific about analytical depth and the nature of extraction required.
+    \item \textbf{Expected Result}: Define the exact output format and emphasize adherence to specified value constraints.
+    \item \textbf{Definitions}: Provide domain-specific terminology explanations, especially for potentially ambiguous concepts.
+    \item \textbf{Example}: Show realistic examples that cover different data patterns and edge cases.
+    \item \textbf{Failsafe}: Include clear guidelines for handling uncertainty, ambiguity, and missing information.
+\end{itemize}
+
+\note{Research suggests that more detailed and domain-specific prompts generally produce more accurate extractions, particularly for specialized scientific concepts.}
+
+\subsection{Advanced Review Structure Patterns}
+
+Beyond basic information extraction, you can implement more sophisticated patterns in your review structure:
+
+\begin{configbox}[Configuration: Advanced Review Structure Patterns]
+\begin{lstlisting}[language=TOML]
+# Hierarchical extraction
+[review.1]
+key = "methodology_type"
+values = ["experimental", "observational", "modeling", "review", "mixed", "other", ""]
+
+[review.2]
+key = "experimental_design"
+values = ["randomized controlled trial", "non-randomized controlled trial", "before-after", "other", "not applicable", ""]
+
+# Conditional extraction
+[review.3]
+key = "sample_size_reported"
+values = ["yes", "no"]
+
+[review.4]
+key = "sample_size_value"
+values = [""]
+
+# Relational extraction
+[review.5]
+key = "crop_types_studied"
+values = [""]
+
+[review.6]
+key = "primary_crop"
+values = [""]
+
+# Confidence assessment
+[review.7]
+key = "statistical_methods_quality"
+values = ["high", "medium", "low", "not applicable", "cannot determine", ""]
+
+\end{lstlisting}
+\end{configbox}
+
+Advanced patterns include:
+
+\begin{itemize}
+    \item \textbf{Hierarchical Extraction}: Extract general categories first, then specific details based on those categories.
+    \item \textbf{Conditional Extraction}: Use yes/no fields to establish presence, then extract specific values only if present.
+    \item \textbf{Relational Extraction}: Capture relationships between different entities (e.g., primary crop among multiple crops studied).
+    \item \textbf{Confidence Assessment}: Include quality assessments of methodological elements.
+\end{itemize}
+
+\tip{When using advanced patterns, ensure your prompt includes clear instructions on how these patterns relate to each other, particularly for conditional extractions.}
+
+\subsection{Iterative Prompt Refinement}
+
+The most effective prompts are developed through an iterative process:
+
+\begin{commandbox}[Iterative Prompt Development Process]
+\begin{lstlisting}
+1. Start with a basic prompt and review structure
+2. Test on 3-5 representative papers
+3. Analyze results for:
+   - Incorrect extractions
+   - Missing information
+   - Ambiguous responses
+   - Inconsistent formatting
+4. Identify patterns in errors or weaknesses
+5. Refine prompt components and review structure
+6. Test again on the same papers plus 2-3 new ones
+7. Repeat until results match expectations
+8. Document all prompt versions and their performance
+\end{lstlisting}
+\end{commandbox}
+
+\warning{Changing prompts mid-review can introduce inconsistency. Once you begin your full review, avoid modifying the prompt unless absolutely necessary. If changes are required, consider re-processing previously analyzed papers.}
+
+\section{Workflow Integration and Automation}
+
+\texttt{prismAId} can be integrated into broader research workflows and automated pipelines.
+
+\subsection{Programmatic Integration}
+
+Each programming language interface allows for integration with existing research workflows:
+
+\begin{commandbox}[Python Integration Example]
+\begin{lstlisting}[language=Python]
+import prismaid
+import os
+import glob
+import pandas as pd
+from datetime import datetime
+
+def run_full_workflow(source_dir, output_dir, config_template, api_key):
+    """Run a complete prismAId workflow from download to analysis"""
+
+    # Create timestamped run directory
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    run_dir = os.path.join(output_dir, f"review_run_{timestamp}")
+    os.makedirs(run_dir, exist_ok=True)
+
+    # Set up subdirectories
+    pdf_dir = os.path.join(run_dir, "pdfs")
+    txt_dir = os.path.join(run_dir, "texts")
+    results_dir = os.path.join(run_dir, "results")
+    os.makedirs(pdf_dir, exist_ok=True)
+    os.makedirs(txt_dir, exist_ok=True)
+    os.makedirs(results_dir, exist_ok=True)
+
+    # 1. Download papers from URL list if available
+    if os.path.exists(os.path.join(source_dir, "papers_urls.txt")):
+        print("Downloading papers from URL list...")
+        prismaid.download_url_list(
+            os.path.join(source_dir, "papers_urls.txt"),
+            output_dir=pdf_dir
+        )
+
+    # 2. Convert PDFs to text
+    print("Converting PDFs to text...")
+    prismaid.convert(pdf_dir, "pdf", output_dir=txt_dir)
+
+    # 3. Update config file with correct paths and API key
+    with open(config_template, 'r') as f:
+        config = f.read()
+
+    # Update paths and API key
+    config = config.replace("INPUT_DIR_PLACEHOLDER", txt_dir)
+    config = config.replace("RESULTS_FILE_PLACEHOLDER", os.path.join(results_dir, "review_results"))
+    config = config.replace("API_KEY_PLACEHOLDER", api_key)
+
+    config_path = os.path.join(run_dir, "review_config.toml")
+    with open(config_path, 'w') as f:
+        f.write(config)
+
+    # 4. Run the review
+    print("Running systematic review...")
+    prismaid.review(config)
+
+    # 5. Generate summary report
+    print("Generating summary report...")
+    try:
+        results_file = glob.glob(os.path.join(results_dir, "review_results.*"))[0]
+        if results_file.endswith('.csv'):
+            results = pd.read_csv(results_file)
+        else:  # JSON
+            results = pd.read_json(results_file)
+
+        # Generate simple summary statistics
+        summary = {}
+        for column in results.columns:
+            if column != 'filename':
+                summary[column] = results[column].value_counts().to_dict()
+
+        # Save summary
+        with open(os.path.join(results_dir, "summary_report.txt"), 'w') as f:
+            f.write(f"Systematic Review Summary - {timestamp}\n")
+            f.write(f"Total papers analyzed: {len(results)}\n\n")
+
+            for column, counts in summary.items():
+                f.write(f"{column}:\n")
+                for value, count in counts.items():
+                    f.write(f"  {value}: {count} papers\n")
+                f.write("\n")
+    except Exception as e:
+        print(f"Error generating summary: {e}")
+
+    print(f"Workflow complete. Results saved to {run_dir}")
+    return run_dir
+
+# Example usage
+api_key = os.environ.get("OPENAI_API_KEY", "")
+run_full_workflow(
+    source_dir="/path/to/source",
+    output_dir="/path/to/output",
+    config_template="/path/to/template.toml",
+    api_key=api_key
+)
+\end{lstlisting}
+\end{commandbox}
+
+\subsection{Batch Processing Strategies}
+
+For large-scale reviews, batch processing can improve efficiency and manageability:
+
+\begin{commandbox}[Bash Script for Batch Processing]
+\begin{lstlisting}[language=Bash]
+#!/bin/bash
+# batch_review.sh - Process a large corpus in manageable batches
+
+if [ "$#" -ne 4 ]; then
+    echo "Usage: $0 <input_dir> <output_dir> <batch_size> <config_template>"
+    exit 1
+fi
+
+INPUT_DIR=$1
+OUTPUT_DIR=$2
+BATCH_SIZE=$3
+CONFIG_TEMPLATE=$4
+
+# Create output directory
+mkdir -p "$OUTPUT_DIR"
+
+# Count total files
+TOTAL_FILES=$(find "$INPUT_DIR" -type f -name "*.txt" | wc -l)
+echo "Total files to process: $TOTAL_FILES"
+
+# Calculate number of batches
+BATCHES=$(( (TOTAL_FILES + BATCH_SIZE - 1) / BATCH_SIZE ))
+echo "Will process in $BATCHES batches of approximately $BATCH_SIZE files each"
+
+# Process in batches
+for BATCH in $(seq 1 $BATCHES); do
+    echo "Processing batch $BATCH of $BATCHES"
+
+    # Create batch directory
+    BATCH_DIR="$OUTPUT_DIR/batch_$BATCH"
+    BATCH_INPUT="$BATCH_DIR/input"
+    BATCH_OUTPUT="$BATCH_DIR/output"
+    mkdir -p "$BATCH_INPUT"
+    mkdir -p "$BATCH_OUTPUT"
+
+    # Get files for this batch
+    find "$INPUT_DIR" -type f -name "*.txt" | sort | head -n $BATCH_SIZE | \
+        xargs -I{} cp {} "$BATCH_INPUT"
+
+    # Remove processed files from consideration for next batch
+    find "$INPUT_DIR" -type f -name "*.txt" | sort | head -n $BATCH_SIZE | \
+        xargs -I{} rm {}
+
+    # Create batch-specific config
+    BATCH_CONFIG="$BATCH_DIR/config.toml"
+    cat "$CONFIG_TEMPLATE" | \
+        sed "s|INPUT_DIR_PLACEHOLDER|$BATCH_INPUT|g" | \
+        sed "s|OUTPUT_FILE_PLACEHOLDER|$BATCH_OUTPUT/results|g" > "$BATCH_CONFIG"
+
+    # Run review for this batch
+    echo "Starting review for batch $BATCH"
+    ./prismaid -project "$BATCH_CONFIG"
+
+    echo "Completed batch $BATCH"
+done
+
+echo "All batches processed. Combining results..."
+
+# Combine results (assuming CSV output)
+HEADER=$(head -n 1 "$OUTPUT_DIR/batch_1/output/results.csv")
+echo "$HEADER" > "$OUTPUT_DIR/combined_results.csv"
+for BATCH in $(seq 1 $BATCHES); do
+    tail -n +2 "$OUTPUT_DIR/batch_$BATCH/output/results.csv" >> "$OUTPUT_DIR/combined_results.csv"
+done
+
+echo "Processing complete. Combined results saved to $OUTPUT_DIR/combined_results.csv"
+\end{lstlisting}
+\end{commandbox}
+
+\reminder{For very large reviews (hundreds or thousands of papers), consider implementing a database backend to store intermediate results and enable incremental processing.}
+
+\subsection{Integration with Research Workflows}
+
+\texttt{prismAId} can be integrated with broader research tools and workflows:
+
+\begin{itemize}
+    \item \textbf{Reference Management}: Integrate with Zotero, Mendeley, or EndNote for literature organization
+    \item \textbf{Statistical Analysis}: Export results to R, SPSS, or specialized meta-analysis software
+    \item \textbf{Collaborative Research}: Share configurations and results through version control systems
+    \item \textbf{Publication Workflows}: Generate formatted tables and figures for manuscript inclusion
+\end{itemize}
+
+\begin{commandbox}[R Script for Meta-Analysis Integration]
+\begin{lstlisting}[language=R]
+# Load libraries
+library(prismaid)
+library(meta)
+library(dplyr)
+library(readr)
+
+# Run prismAId review
+toml_content <- paste(readLines("meta_analysis_config.toml"), collapse = "\n")
+RunReview(toml_content)
+
+# Load and process results
+results <- read_csv("results/meta_analysis_results.csv")
+
+# Extract effect sizes and variance
+meta_data <- results %>%
+  # Convert extracted text to proper numeric format
+  mutate(
+    effect_size = as.numeric(gsub("[^0-9.-]", "", effect_size)),
+    sample_size = as.numeric(gsub("[^0-9]", "", sample_size)),
+    p_value = as.numeric(gsub("[^0-9.]", "", p_value))
+  ) %>%
+  # Filter out rows with missing data
+  filter(!is.na(effect_size) & !is.na(sample_size)) %>%
+  # Calculate standard error from p-values and effect sizes where possible
+  mutate(
+    standard_error = case_when(
+      !is.na(p_value) ~ abs(effect_size) / qnorm(1 - p_value/2),
+      TRUE ~ NA_real_
+    )
+  ) %>%
+  # Only keep rows with complete data needed for meta-analysis
+  filter(!is.na(standard_error))
+
+# Perform meta-analysis
+if(nrow(meta_data) >= 3) {  # Need at least 3 studies for meaningful meta-analysis
+  meta_analysis <- metagen(
+    TE = meta_data$effect_size,
+    seTE = meta_data$standard_error,
+    studlab = meta_data$filename,
+    sm = "SMD",  # Standardized Mean Difference
+    method.tau = "REML",  # Restricted Maximum-Likelihood estimator
+    hakn = TRUE  # Hartung-Knapp adjustment
+  )
+
+  # Print results
+  summary(meta_analysis)
+
+  # Create forest plot
+  pdf("results/forest_plot.pdf", width=10, height=8)
+  forest(meta_analysis,
+         sortvar = meta_data$effect_size,
+         prediction = TRUE,
+         print.tau2 = TRUE,
+         print.I2 = TRUE)
+  dev.off()
+
+  # Test for publication bias
+  pdf("results/funnel_plot.pdf", width=8, height=8)
+  funnel(meta_analysis, studlab = TRUE, contour = TRUE)
+  dev.off()
+
+  # Run Egger's test
+  eggers_test <- metabias(meta_analysis, method = "linreg")
+  capture.output(eggers_test, file = "results/publication_bias_test.txt")
+} else {
+  write("Insufficient data for meta-analysis (need at least 3 studies with effect sizes and standard errors)",
+        file = "results/meta_analysis_error.txt")
+}
+\end{lstlisting}
+\end{commandbox}
+
+\section{Conclusion}
+
+Advanced features of \texttt{prismAId} significantly enhance its capabilities beyond basic systematic reviews. Ensemble reviews provide increased confidence and uncertainty quantification. Debugging features help identify and resolve issues in the extraction process. Cost management strategies optimize resource utilization, while advanced prompt engineering improves the quality and reliability of extractions. Finally, programmatic integration and automation enable seamless incorporation of \texttt{prismAId} into comprehensive research workflows.
+
+By mastering these advanced features, researchers can conduct more sophisticated, reliable, and efficient systematic reviews that maintain the highest standards of methodological rigor while leveraging the power of artificial intelligence.
+
+\tip{Start with simpler configurations and gradually incorporate advanced features as you become more familiar with \texttt{prismAId}. Each feature adds power but also complexity, so build your expertise incrementally.}

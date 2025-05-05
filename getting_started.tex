@@ -1,7 +1,7 @@
-\chapter{Installation \& Setup} 
+\chapter{Installation \& Setup}
 \label{chap:install}
 
-This chapter explains how to install \texttt{prismAId}, covering system requirements, installation steps, and first-time setup.
+This chapter explains how to install \texttt{prismAId}, covering system requirements, installation methods, and first-time setup for each of the toolkit's components.
 
 \section{System Requirements}
 
@@ -12,23 +12,40 @@ Before installing \texttt{prismAId}, ensure your system meets the following requ
     \item \textbf{Processor}: 64-bit CPU (Intel, AMD, or ARM64).
     \item \textbf{Memory}: At least 4GB RAM (8GB recommended).
     \item \textbf{Storage}: Minimum 500MB of free disk space.
+    \item \textbf{Internet Connection}: Required for downloading packages and accessing LLM APIs.
+    \item \textbf{API Keys}: To use the Review tool, you'll need an API key from at least one of the supported LLM providers (OpenAI, GoogleAI, Cohere, Anthropic, or DeepSeek).
 \end{itemize}
 
-\section{Installation Instructions}
+\section{Installation Methods}
 
-\texttt{prismAId} can be installed as a standalone executable for direct use.
+\texttt{prismAId} can be installed in multiple ways, depending on your preferences and workflow requirements. Choose the method that best suits your needs.
 
-\subsection{Installing the CLI Executable}
+\subsection{Method 1: Standalone Binaries}
 
-Download the appropriate binary for your operating system from the page of releases in the official repository.
+The simplest installation method is to download the pre-compiled binaries, which require no additional dependencies.\note{Binaries are standalone executables that work on Linux, macOS, and Windows, supporting both AMD64 and Arm64 architectures.}
+
+\begin{enumerate}
+    \item Navigate to the \href{https://github.com/open-and-sustainable/prismaid/releases}{GitHub Releases page}.
+    \item Download the appropriate binary for your operating system.
+    \item Extract the file to a directory of your choice.
+\end{enumerate}
 
 \subsubsection{Windows}
 \reminder{On Windows, you may need to allow execution if prompted by security settings.}
 \begin{commandbox}[Command: Running \texttt{prismAId} on Windows]
 After downloading, navigate to the folder and run:
 \begin{lstlisting}[language=Bash]
-# Run the program
-./prismAId_windows_amd64.exe -project your_project.toml
+# Run the Review tool with a project configuration
+./prismaid.exe -project your_project.toml
+
+# Download papers from Zotero
+./prismaid.exe -download-zotero zotero_config.toml
+
+# Download papers from URL list
+./prismaid.exe -download-URL paper_urls.txt
+
+# Convert PDF files to text
+./prismaid.exe -convert-pdf ./papers
 \end{lstlisting}
 \end{commandbox}
 
@@ -38,8 +55,16 @@ After downloading, navigate to the folder and run:
 \begin{commandbox}[Command: Running \texttt{prismAId} on macOS]
 After downloading, give execution permissions and run:
 \begin{lstlisting}[language=Bash]
-chmod +x prismAId_mac_amd64
-./prismAId_mac_amd64 -project your_project.toml
+chmod +x prismaid
+./prismaid -project your_project.toml
+
+# Download papers from Zotero
+./prismaid -download-zotero zotero_config.toml
+
+# Convert various file formats to text
+./prismaid -convert-pdf ./papers
+./prismaid -convert-docx ./papers
+./prismaid -convert-html ./papers
 \end{lstlisting}
 \end{commandbox}
 
@@ -47,24 +72,212 @@ chmod +x prismAId_mac_amd64
 \tip{If you receive a "Permission denied" error, try running \texttt{chmod +x} again or executing with \texttt{sudo}.}
 \begin{commandbox}[Command: Running \texttt{prismAId} on Linux]
 \begin{lstlisting}[language=Bash]
-chmod +x prismAId_linux_amd64
-./prismAId_linux_amd64 -project your_project.toml
+chmod +x prismaid
+./prismaid -project your_project.toml
+
+# Initialize a new project configuration interactively
+./prismaid -init
+
+# Download papers from a URL list
+./prismaid -download-URL paper_urls.txt
 \end{lstlisting}
 \end{commandbox}
 
 
+\subsection{Method 2: Go Package}
+
+If you are a Go developer, you can use \texttt{prismAId} as a Go package.\tip{The Go package offers the most comprehensive functionality, as it is the native implementation.}
+
+\begin{commandbox}[Command: Installing the Go Package]
+\begin{lstlisting}[language=Bash]
+go get "github.com/open-and-sustainable/prismaid"
+\end{lstlisting}
+\end{commandbox}
+
+\begin{commandbox}[Code: Using prismAId in Go]
+\begin{lstlisting}[language=Go]
+import "github.com/open-and-sustainable/prismaid"
+
+// Run a systematic review
+err := prismaid.Review(tomlConfigString)
+
+// Download papers from Zotero
+err := prismaid.DownloadZoteroPDFs(username, apiKey, collectionName, parentDir)
+
+// Download from URL list
+err := prismaid.DownloadURLList("path/to/urls.txt")
+
+// Convert files to text
+err := prismaid.Convert(inputDir, "pdf,docx,html")
+\end{lstlisting}
+\end{commandbox}
+
+\subsection{Method 3: Python Package}
+
+For Python users, \texttt{prismAId} is available as a package on PyPI.\note{The Python package works on Linux and Windows AMD64, and macOS Arm64.}
+
+\begin{commandbox}[Command: Installing the Python Package]
+\begin{lstlisting}[language=Bash]
+pip install prismaid
+\end{lstlisting}
+\end{commandbox}
+
+\begin{commandbox}[Code: Using prismAId in Python]
+\begin{lstlisting}[language=Python]
+import prismaid
+
+# Run a systematic review
+with open("project.toml", "r") as file:
+    toml_config = file.read()
+prismaid.review(toml_config)
+
+# Download papers from Zotero
+prismaid.download_zotero_pdfs("username", "api_key", "collection_name", "./papers")
+
+# Download from URL list
+prismaid.download_url_list("urls.txt")
+
+# Convert files to text
+prismaid.convert("./papers", "pdf,docx,html")
+\end{lstlisting}
+\end{commandbox}
+
+\subsection{Method 4: R Package}
+
+For R users, \texttt{prismAId} is available as a package on R-universe.\note{The R package works on Linux AMD64 and macOS Arm64.}
+
+\begin{commandbox}[Command: Installing the R Package]
+\begin{lstlisting}[language=R]
+install.packages("prismaid", repos = c("https://open-and-sustainable.r-universe.dev", "https://cloud.r-project.org"))
+\end{lstlisting}
+\end{commandbox}
+
+\begin{commandbox}[Code: Using prismAId in R]
+\begin{lstlisting}[language=R]
+library(prismaid)
+
+# Run a systematic review
+toml_content <- paste(readLines("project.toml"), collapse = "\n")
+RunReview(toml_content)  # Note the capitalization
+
+# Download papers from Zotero
+DownloadZoteroPDFs("username", "api_key", "collection_name", "./papers")
+
+# Download from URL list
+DownloadURLList("urls.txt")
+
+# Convert files to text
+Convert("./papers", "pdf,docx,html")
+\end{lstlisting}
+\end{commandbox}
+
+\subsection{Method 5: Julia Package}
+
+For Julia users, \texttt{prismAId} is available as a package.\note{The Julia package works on Linux and Windows AMD64, and macOS Arm64.}
+
+\begin{commandbox}[Command: Installing the Julia Package]
+\begin{lstlisting}[language=Julia]
+using Pkg
+Pkg.add("PrismAId")
+\end{lstlisting}
+\end{commandbox}
+
+\begin{commandbox}[Code: Using prismAId in Julia]
+\begin{lstlisting}[language=Julia]
+using PrismAId
+
+# Run a systematic review
+toml_config = read("project.toml", String)
+PrismAId.run_review(toml_config)
+
+# Download papers from Zotero
+PrismAId.download_zotero_pdfs("username", "api_key", "collection_name", "./papers")
+
+# Download from URL list
+PrismAId.download_url_list("urls.txt")
+
+# Convert files to text
+PrismAId.convert("./papers", "pdf,docx,html")
+\end{lstlisting}
+\end{commandbox}
+
+\section{Setting Up API Keys}
+
+To use the Review tool of \texttt{prismAId}, you need to set up API keys for at least one of the supported LLM providers.\warning{Keep your API keys secure. Never share them in public repositories or unencrypted communications.}
+
+\subsection{Obtaining API Keys}
+
+\begin{itemize}
+    \item \textbf{OpenAI}: Register at \href{https://www.openai.com/}{openai.com} and obtain an API key from your account dashboard.
+    \item \textbf{GoogleAI}: Create an account at \href{https://aistudio.google.com}{aistudio.google.com} and generate an API key.
+    \item \textbf{Cohere}: Sign up at \href{https://cohere.com/}{cohere.com} and retrieve your API key from the dashboard.
+    \item \textbf{Anthropic}: Register at \href{https://www.anthropic.com/}{anthropic.com} and generate an API key.
+    \item \textbf{DeepSeek}: Create an account at \href{https://platform.deepseek.com/}{platform.deepseek.com} and obtain an API key.
+\end{itemize}
+
+\subsection{Configuring API Keys}
+
+There are two ways to configure your API keys:
+
+\subsubsection{Environment Variables}
+
+Set environment variables for your API keys:
+
+\begin{commandbox}[Command: Setting API Key Environment Variables]
+\begin{lstlisting}[language=Bash]
+# For OpenAI
+export OPENAI_API_KEY="your-openai-api-key"
+
+# For GoogleAI
+export GOOGLEAI_API_KEY="your-googleai-api-key"
+
+# For Cohere
+export COHERE_API_KEY="your-cohere-api-key"
+
+# For Anthropic
+export ANTHROPIC_API_KEY="your-anthropic-api-key"
+
+# For DeepSeek
+export DEEPSEEK_API_KEY="your-deepseek-api-key"
+\end{lstlisting}
+\end{commandbox}
+
+\subsubsection{Configuration File}
+
+Add your API keys directly in the TOML configuration file:
+
+\begin{configbox}[Configuration: API Keys in TOML]
+\begin{lstlisting}[language=TOML]
+[project.llm.1]
+provider = "OpenAI"
+api_key = "your-openai-api-key"
+model = "gpt-4o-mini"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+\end{lstlisting}
+\end{configbox}
+
+\tip{If both environment variables and configuration file entries are present, the configuration file values take priority.}
+
 \section{First-Time Setup}
 
-After installation, create a new project configuration.
+After installation, create a new project configuration. This can be done interactively or by using the web-based configurator.
+
+\subsection{Interactive Terminal Setup}
 
 \begin{commandbox}[Command: Creating a New Project]
 Run the following command:
 \begin{lstlisting}[language=Bash]
-./prismAId_windows_amd64.exe -init
+./prismaid -init
 \end{lstlisting}
 \end{commandbox}
 
-This prompts the user multiple questions and generates a configuration file.\reminder{Always keep a backup of your configuration file before making major modifications.}
+This prompts you with multiple questions and generates a TOML configuration file.\reminder{Always keep a backup of your configuration file before making major modifications.}
+
+\subsection{Web-Based Setup}
+
+Alternatively, use the web-based configurator available at \href{https://open-and-sustainable.github.io/prismaid/review-configurator.html}{open-and-sustainable.github.io/prismaid/review-configurator.html} to create your configuration file interactively in a browser.
 
 \begin{configbox}[Configuration: Example of Initial Sections of a Configuration]
 To configure \texttt{prismAId}, edit the generated \texttt{your\_project.toml} file:
@@ -76,7 +289,6 @@ version = "1.0"
 
 [project.configuration]
 input_directory = "/path/to/txt/files"
-input_conversion = ""
 results_file_name = "/path/to/save/results"
 output_format = "json"
 log_level = "low"
@@ -88,184 +300,79 @@ summary = "no"
 
 \section{Verifying the Installation}
 
-Check if \texttt{prismAId} is correctly installed:\note{If you encounter issues, refer to the troubleshooting section or seek help from the community.}
+Check if \texttt{prismAId} is correctly installed:\note{If you encounter issues, refer to the troubleshooting section or seek help from the community through GitHub issues or the Matrix Support Room.}
 
 \begin{commandbox}[Command: Verifying Installation]
 \begin{lstlisting}[language=Bash]
-./prismAId_windows_amd64.exe --version
+# For binaries
+./prismaid --version
+
+# For Python
+python -c "import prismaid; print(prismaid.__version__)"
+
+# For R
+R -e "library(prismaid); cat(prismaid_version())"
+
+# For Julia
+julia -e "using PrismAId; println(PrismAId.version())"
+\end{lstlisting}
+\end{commandbox}
+
+\section{Use in Jupyter Notebooks}
+
+When using prismAId in Jupyter notebooks with Python (versions ≤ 0.6.6), special handling may be required for interactive prompts:
+
+\begin{commandbox}[Code: Using prismAId in Jupyter Notebooks]
+\begin{lstlisting}[language=Python]
+import pty
+import os
+import time
+import select
+
+def run_review_with_auto_input(input_str):
+    master, slave = pty.openpty()  # Create a pseudo-terminal
+
+    pid = os.fork()
+    if pid == 0:  # Child process
+        os.dup2(slave, 0)  # Redirect stdin
+        os.dup2(slave, 1)  # Redirect stdout
+        os.dup2(slave, 2)  # Redirect stderr
+        os.close(master)
+        import prismaid
+        prismaid.RunReviewPython(input_str.encode("utf-8"))
+        os._exit(0)
+
+    else:  # Parent process
+        os.close(slave)
+        try:
+            while True:
+                rlist, _, _ = select.select([master], [], [], 5)
+                if master in rlist:
+                    output = os.read(master, 1024).decode("utf-8", errors="ignore")
+                    if not output:
+                        break  # Process finished
+
+                    print(output, end="")
+
+                    if "Do you want to continue?" in output:
+                        print("\n[SENDING INPUT: y]")
+                        os.write(master, b"y\n")
+                        time.sleep(1)
+        finally:
+            os.close(master)
+            os.waitpid(pid, 0)  # Ensure the child process is cleaned up
+
+# Load your review (TOML) configuration
+with open("config.toml", "r") as file:
+    input_str = file.read()
+
+# Run the review function
+run_review_with_auto_input(input_str)
 \end{lstlisting}
 \end{commandbox}
 
 \section{Conclusion}
 
-You have now installed \texttt{prismAId} and completed the first-time setup. The next chapter will guide you through configuring your project.
+You have now installed \texttt{prismAId} and completed the first-time setup. The toolkit offers five different installation methods, making it accessible across various platforms and programming environments. Each component (Download, Convert, and Review) can be used independently or as part of an integrated workflow.
 
-
-\chapter{Configuring prismAId} 
-\label{chap:config}
-
-\texttt{prismAId} requires a configuration file to define project settings, data sources, and review parameters. This chapter explains how to initialize, modify, and understand the configuration file.
-
-\section{Initializing a Configuration File}
-
-Users can create a configuration file in two ways:
-
-\subsection{Terminal-Based Initialization}
-
-From the command line, run:
-
-\begin{commandbox}[Command: Initialize a new configuration file]
-\begin{lstlisting}[language=Bash]
-./prismAId_windows_amd64.exe -init
-\end{lstlisting}
-\end{commandbox}
-\reminder{A configuration template is also provided in the repository for reference.}
-This interactively generates a `.toml` configuration file based on user preferences.
-
-\subsection{Web-Based Initialization}
-
-\texttt{prismAId} provides a web-based interface to generate configuration files. Navigate to the a browser-based interface at \href{https://open-and-sustainable.github.io/prismaid/review-configurator.html}{open-and-sustainable.github.io/prismaid/review-configurator.html}, fill in the details interactively, and download or copy the configuration file generated.
-
-\section{Understanding the Configuration File}
-
-The configuration file is structured into sections, each controlling different aspects of \texttt{prismAId}. Below is a breakdown of its components.
-
-\subsection{Project Information}
-
-\begin{configbox}[Configuration: Project Metadata]
-\begin{lstlisting}[language=TOML]
-[project]
-name = "Use of LLM for systematic review"
-author = "John Doe"
-version = "1.0"
-\end{lstlisting}
-\end{configbox}
-
-\textbf{Entries:}
-\begin{itemize}
-    \item \texttt{name} – Title of the project.
-    \item \texttt{author} – Name of the person managing the review.
-    \item \texttt{version} – Configuration file version.
-\end{itemize}
-
-\subsection{Project Configuration}
-
-\begin{configbox}[Configuration: General Settings]
-\begin{lstlisting}[language=TOML]
-[project.configuration]
-input_directory = "/path/to/txt/files"
-input_conversion = "pdf,docx"
-results_file_name = "/path/to/save/results"
-output_format = "json"
-log_level = "low"
-duplication = "no"
-cot_justification = "no"
-summary = "no"
-\end{lstlisting}
-\end{configbox}
-
-\textbf{Entries:}
-\begin{itemize}
-    \item \texttt{input\_directory} – Path to manuscript files for review.
-    \item \texttt{input\_conversion} – File types to be converted (`pdf`, `docx`, etc.).
-    \item \texttt{results\_file\_name} – Path for storing output files.
-    \item \texttt{output\_format} – Format for results (`csv` or `json`).
-    \item \texttt{log\_level} – Logging level (`low`, `medium`, `high`).
-    \item \texttt{duplication} – Whether to duplicate manuscripts for debugging (`yes` or `no`).
-    \item \texttt{cot\_justification} – Whether to store model justification (`yes` or `no`).
-    \item \texttt{summary} – Whether to generate summaries (`yes` or `no`).
-\end{itemize}
-
-\subsection{Zotero Integration (Optional)}
-
-\begin{configbox}[Configuration: Zotero Settings]
-\begin{lstlisting}[language=TOML]
-[project.zotero]
-user = ""
-api_key = ""
-group = ""
-\end{lstlisting}
-\end{configbox}
-
-\textbf{Entries:}
-\begin{itemize}
-    \item \texttt{user} – Zotero user ID.
-    \item \texttt{api\_key} – API key for accessing Zotero.
-    \item \texttt{group} – Collection or group name in Zotero.
-\end{itemize}
-
-\subsection{LLM Model Configuration}
-
-\texttt{prismAId} supports multiple LLM providers.
-
-\begin{configbox}[Configuration: LLM Settings]
-\begin{lstlisting}[language=TOML]
-[project.llm.1]
-provider = "OpenAI"
-api_key = ""
-model = "gpt-4o-mini"
-temperature = 0.01
-tpm_limit = 0
-rpm_limit = 0
-\end{lstlisting}
-\end{configbox}
-
-\textbf{Entries:}
-\begin{itemize}
-    \item \texttt{provider} – LLM provider (`OpenAI`, `GoogleAI`, `Cohere`, or `Anthropic`).
-    \item \texttt{api\_key} – API key for authentication.
-    \item \texttt{model} – Model name (varies by provider).
-    \item \texttt{temperature} – Controls randomness (`0-1`, or `0-2` for GoogleAI).
-    \item \texttt{tpm\_limit} – Tokens per minute limit (`0` for no limit).
-    \item \texttt{rpm\_limit} – Requests per minute limit (`0` for no limit).
-\end{itemize}
-
-\subsection{Prompt Configuration}
-
-\begin{configbox}[Configuration: Prompt Structure]
-\begin{lstlisting}[language=TOML]
-[prompt]
-persona = "You are an experienced scientist..."
-task = "You are asked to map concepts in a paper."
-expected_result = "Output a JSON object with..."
-definitions = "'Interest rate' is defined as..."
-example = ""
-failsafe = "If concepts are unclear, return ''"
-\end{lstlisting}
-\end{configbox}
-
-\textbf{Entries:}
-\begin{itemize}
-    \item \texttt{persona} – Role the model should assume.
-    \item \texttt{task} – Description of the model’s job.
-    \item \texttt{expected\_result} – Defines expected output structure.
-    \item \texttt{definitions} – Key concept definitions.
-    \item \texttt{example} – Example cases (optional).
-    \item \texttt{failsafe} – How the model should handle uncertainty.
-\end{itemize}
-
-\subsection{Review Structure}
-
-\begin{configbox}[Configuration: Review Key-Value Structure]
-\begin{lstlisting}[language=TOML]
-[review.1]
-key = "interest rate"
-values = [""]
-[review.2]
-key = "regression models"
-values = ["yes", "no"]
-\end{lstlisting}
-\end{configbox}
-
-\textbf{Entries:}
-\begin{itemize}
-    \item \texttt{key} – Topic being analyzed.
-    \item \texttt{values} – Possible values for each key.
-\end{itemize}
-
-\section{Conclusion}
-
-The configuration file defines every aspect of a \texttt{prismAId} project. Users have no need to define or modify anything else. 
-
-Users can modify settings manually starting from the provided template, or use the web configurator or the terminal-based one for an interactive setup.
-
+In the next chapter, we'll explore how to configure your project in detail to leverage all of \texttt{prismAId}'s capabilities.

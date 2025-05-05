@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 title: prismAId User Manual
-message: "v0.0.2 - Manual outline with DOI."
+message: "v0.0.3 - Revision to support separate features in toolkit."
 authors:
   - given-names: Riccardo
     family-names: Boero
@@ -26,4 +26,3 @@ keywords:
   - Open Source
   - Open Science
 license: CC-BY-SA-4.0
-
