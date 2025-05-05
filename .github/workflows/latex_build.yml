@@ -1,75 +1,79 @@
 name: Build LaTeX PDFs
 
 on:
-  push:
-    tags:
-      - "v*"  # Runs only on version tags (e.g., v1.0.0)
+    push:
+        tags:
+            - "v*" # Runs only on version tags (e.g., v1.0.0)
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
 
-    container:
-      image: texlive/texlive:latest
+        container:
+            image: texlive/texlive:latest
 
-    steps:
-      # Step 1: Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
+        steps:
+            # Step 1: Checkout the repository
+            - name: Checkout repository
+              uses: actions/checkout@v3
 
-      # Step 2: Determine the latest Git tag (fallback to v0.0.0 if none exists)
-      - name: Get latest Git tag
-        run: |
-          git config --global --add safe.directory /__w/prismaid_manual/prismaid_manual
-          git fetch --tags
-          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-          echo "Latest tag: $TAG"
-          echo "$TAG" > version.tex
-          echo "VERSION=$TAG" >> $GITHUB_ENV
+            # Step 2: Determine the latest Git tag (fallback to v0.0.0 if none exists)
+            - name: Get latest Git tag
+              run: |
+                  git config --global --add safe.directory /__w/prismaid_manual/prismaid_manual
+                  git fetch --tags
+                  TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+                  echo "Latest tag: $TAG"
+                  echo "$TAG" > version.tex
+                  echo "VERSION=$TAG" >> $GITHUB_ENV
 
-      # Step 3: Compile the LaTeX file with XeLaTeX
-      - name: Compile Manual to PDF
-        run: |
-          xelatex -interaction=nonstopmode prismaid_manual.tex
-          xelatex -interaction=nonstopmode prismaid_manual.tex  # Run twice for cross-references
+            # Step 3: Compile the LaTeX file with XeLaTeX
+            - name: Compile Manual to PDF (with auto-retries)
+              run: |
+                  set -e
+                  for i in 1 2 3; do
+                    xelatex -interaction=nonstopmode prismaid_manual.tex || true
+                    grep -q "Rerun to get cross-references right" prismaid_manual.log || break
+                    echo "Re-running xelatex due to cross-reference warnings..."
+                  done
 
-      # Step 4: Mark the repository as safe for Git
-      - name: Mark directory as safe for Git
-        run: git config --global --add safe.directory /__w/prismaid_manual/prismaid_manual
+            # Step 4: Mark the repository as safe for Git
+            - name: Mark directory as safe for Git
+              run: git config --global --add safe.directory /__w/prismaid_manual/prismaid_manual
 
-      # Step 5: Stash uncommitted changes (PDFs and version file)
-      - name: Stash uncommitted changes
-        run: git stash --include-untracked
+            # Step 5: Stash uncommitted changes (PDFs and version file)
+            - name: Stash uncommitted changes
+              run: git stash --include-untracked
 
-      # Step 6: Fetch latest changes and rebase
-      - name: Fetch and Rebase
-        run: |
-          git fetch origin
-          git pull --rebase origin main
+            # Step 6: Fetch latest changes and rebase
+            - name: Fetch and Rebase
+              run: |
+                  git fetch origin
+                  git pull --rebase origin main
 
-      # Step 7: Pop the stashed changes (restore the PDFs)
-      - name: Pop stashed changes
-        run: git stash pop || echo "No stashed changes to pop"
+            # Step 7: Pop the stashed changes (restore the PDFs)
+            - name: Pop stashed changes
+              run: git stash pop || echo "No stashed changes to pop"
 
-      - name: Switch to Main Branch
-        run: |
-          git checkout main
-          git pull --rebase origin main  # Ensure the latest changes are in sync
+            - name: Switch to Main Branch
+              run: |
+                  git checkout main
+                  git pull --rebase origin main  # Ensure the latest changes are in sync
 
-      # Step 8: Commit and push the PDFs and version file back to the repository
-      - name: Commit and Push PDFs
-        run: |
-          git config --global user.name "GitHub Action"
-          git config --global user.email "action@github.com"
-          git add prismaid_manual.pdf version.tex
-          git diff --cached --quiet || git commit -m "Update PDFs and version info"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            # Step 8: Commit and push the PDFs and version file back to the repository
+            - name: Commit and Push PDFs
+              run: |
+                  git config --global user.name "GitHub Action"
+                  git config --global user.email "action@github.com"
+                  git add prismaid_manual.pdf version.tex
+                  git diff --cached --quiet || git commit -m "Update PDFs and version info"
+                  git push
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload PDF to GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: prismaid_manual.pdf
-          tag_name: ${{ env.VERSION }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+            - name: Upload PDF to GitHub Release
+              uses: softprops/action-gh-release@v1
+              with:
+                  files: prismaid_manual.pdf
+                  tag_name: ${{ env.VERSION }}
+                  token: ${{ secrets.GITHUB_TOKEN }}
