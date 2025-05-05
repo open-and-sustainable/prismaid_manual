@@ -434,7 +434,7 @@ cd my_systematic_review
     \item Run the URL download command to fetch all papers.
 \end{enumerate}
 
-\begin{commandbox}[Example URL List File: paper_urls.txt]
+\begin{commandbox}[Example URL List File: paper\_urls.txt]
 \begin{lstlisting}
 https://arxiv.org/pdf/2303.08774.pdf
 https://www.science.org/doi/pdf/10.1126/science.1236498
@@ -569,7 +569,7 @@ cd my_systematic_review
 \end{lstlisting}
 \end{commandbox}
 
-\warning{Long-running reviews may encounter API rate limits. Use the `tpm_limit` and `rpm_limit` settings in your configuration to manage API usage and avoid interruptions.}
+\warning{Long-running reviews may encounter API rate limits. Use the `tpm\_limit` and `rpm\_limit` settings in your configuration to manage API usage and avoid interruptions.}
 
 \section{Interpreting Results}
 
@@ -592,7 +592,7 @@ paper3.txt,multiple,multiple factors,varied by region and crop,yes,mixed
 \end{lstlisting}
 \end{commandbox}
 
-\reminder{If you enabled `cot_justification`, each paper will have a corresponding justification file that explains the reasoning behind the extracted information. These can be invaluable for validation and deeper understanding.}
+\reminder{If you enabled `cot\_justification`, each paper will have a corresponding justification file that explains the reasoning behind the extracted information. These can be invaluable for validation and deeper understanding.}
 
 \subsection{Validating Extraction Quality}
 
@@ -637,7 +637,7 @@ results %>%
 \end{lstlisting}
 \end{commandbox}
 
-\note{Extracting numerical data from free-text fields like `yield_impact` may require additional processing before quantitative analysis.}
+\note{Extracting numerical data from free-text fields like `yield\_impact` may require additional processing before quantitative analysis.}
 
 \section{Exporting Findings}
 
