@@ -69,6 +69,13 @@
     fonttitle=\bfseries, title={#1}, colbacktitle=brightred % Match background color
 }
 
+\newtcolorbox{infobox}[1][]{%
+    colframe=black!30, colback=gray!5, coltitle=black, % Neutral colors
+    boxrule=0.5pt, arc=1mm, left=5pt, right=5pt, top=5pt, bottom=5pt,
+    fonttitle=\bfseries, title={#1}, colbacktitle=gray!20,
+    breakable
+}
+
 % Code Formatting
 \usepackage{listings}
 \lstset{

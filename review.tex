@@ -6,7 +6,7 @@ This chapter provides a foundational understanding of systematic reviews, their 
 
 A systematic review is a rigorous, transparent approach to synthesizing existing research literature on a specific research question.\tip{The term "systematic" emphasizes that these reviews follow an explicit, reproducible methodology.} Unlike narrative reviews, which offer subjective summaries of selected studies, systematic reviews aim to identify, evaluate, and integrate findings from all relevant studies using predefined protocols.
 
-Systematic reviews serve several critical purposes in scientific research:
+Systematic reviews serve several critical purposes in scientific research:\note{Systematic reviews differ from other literature reviews in their methodological rigor, comprehensive search strategies, explicit inclusion criteria, and transparent reporting of methods.}
 
 \begin{itemize}
     \item \textbf{Consolidating Knowledge}: They integrate findings across multiple studies, providing a comprehensive understanding of available evidence.
@@ -15,15 +15,13 @@ Systematic reviews serve several critical purposes in scientific research:
     \item \textbf{Supporting Evidence-Based Decisions}: They provide synthesized evidence to inform policy, practice, and further research.
 \end{itemize}
 
-\note{Systematic reviews differ from other literature reviews in their methodological rigor, comprehensive search strategies, explicit inclusion criteria, and transparent reporting of methods.}
-
 Systematic reviews can also include meta-analyses, which statistically combine results from multiple studies to estimate overall effects.\warning{Meta-analyses require statistical expertise and should only be conducted when studies are sufficiently similar in design and outcome measures.}
 
 \section{Key Concepts \& Methodology}
 
 The systematic review process follows a well-established methodology that ensures transparency and reproducibility. The widely adopted PRISMA framework (Preferred Reporting Items for Systematic Reviews and Meta-Analyses) outlines the following essential steps:
 
-\begin{configbox}[PRISMA 2020 Framework Overview]
+\begin{infobox}[PRISMA 2020 Framework Overview]
 \begin{lstlisting}
 PRISMA 2020 Key Components:
 1. Title & Abstract
@@ -37,21 +35,20 @@ PRISMA 2020 Key Components:
 
 Full checklist available at: prisma-statement.org
 \end{lstlisting}
-\end{configbox}
+\end{infobox}
 
 \subsection{Pre-Review Planning}
 
-Before beginning the review, researchers must:
+Before beginning the review, researchers must:\tip{Well-formulated research questions are specific, clear, and focused. Avoid questions that are too broad ("What is known about climate change?") or too narrow ("What is the effect of a 1.5°C temperature increase on the reproduction of a specific butterfly species in northern Sweden?").}
 
 \begin{itemize}
     \item \textbf{Formulate Research Questions}: Define specific, answerable questions using frameworks like PICO (Population, Intervention, Comparison, Outcome) or PEO (Population, Exposure, Outcome).
-    \item \textbf{Develop Review Protocol}: Create a detailed plan specifying search strategies, inclusion/exclusion criteria, and analysis methods.
+    \item \textbf{Develop Review Protocol}: Create a detailed plan specifying search strategies, inclusion/exclusion criteria, and analysis methods.\reminder{Always register your systematic review protocol before beginning the review process. This prevents bias and demonstrates methodological transparency.}
+
     \item \textbf{Register Protocol}: Pre-register the protocol in repositories like PROSPERO to enhance transparency and prevent duplication.
 \end{itemize}
 
-\tip{Well-formulated research questions are specific, clear, and focused. Avoid questions that are too broad ("What is known about climate change?") or too narrow ("What is the effect of a 1.5°C temperature increase on the reproduction of a specific butterfly species in northern Sweden?").}
-
-\begin{commandbox}[PICO Framework Example]
+\begin{infobox}[PICO Framework Example]
 \begin{lstlisting}
 Research Question: "What is the effect of cognitive behavioral therapy compared to medication on depression symptoms in adults?"
 
@@ -60,21 +57,19 @@ I (Intervention): Cognitive behavioral therapy
 C (Comparison): Medication treatment
 O (Outcome): Depression symptom reduction
 \end{lstlisting}
-\end{commandbox}
-
-\reminder{Always register your systematic review protocol before beginning the review process. This prevents bias and demonstrates methodological transparency.}
+\end{infobox}
 
 \subsection{Literature Search \& Selection}
 
 The search and selection phase involves:
 
 \begin{itemize}
-    \item \textbf{Comprehensive Search}: Implement systematic search strategies across multiple databases using carefully constructed search terms.
+    \item \textbf{Comprehensive Search}: Implement systematic search strategies across multiple databases using carefully constructed search terms.\warning{Relying on a single database significantly increases the risk of missing relevant studies. Research shows that even comprehensive databases like PubMed or Web of Science individually capture only 50-75\% of eligible studies in many fields.}
     \item \textbf{Screening}: Apply inclusion and exclusion criteria in a two-stage process: title/abstract screening followed by full-text assessment.
     \item \textbf{PRISMA Flow Diagram}: Document the selection process, including numbers of studies identified, screened, assessed for eligibility, and included.
 \end{itemize}
 
-\begin{commandbox}[PubMed Search Strategy Example]
+\begin{infobox}[PubMed Search Strategy Example]
 \begin{lstlisting}
 ("climate change"[MeSH Terms] OR "global warming"[Title/Abstract])
 AND
@@ -84,21 +79,19 @@ AND
 AND
 ("2010"[Date - Publication] : "2023"[Date - Publication])
 \end{lstlisting}
-\end{commandbox}
-
-\warning{Relying on a single database significantly increases the risk of missing relevant studies. Research shows that even comprehensive databases like PubMed or Web of Science individually capture only 50-75\% of eligible studies in many fields.}
+\end{infobox}
 
 \subsection{Data Extraction \& Quality Assessment}
 
 Once relevant studies are identified, researchers:
 
 \begin{itemize}
-    \item \textbf{Extract Data}: Systematically collect relevant information from each study using standardized forms.
-    \item \textbf{Assess Quality}: Evaluate methodological rigor using tools like the Cochrane Risk of Bias Tool or GRADE (Grading of Recommendations Assessment, Development, and Evaluation).
+    \item \textbf{Extract Data}: Systematically collect relevant information from each study using standardized forms.\tip{Create your data extraction form in digital format (e.g., spreadsheet) rather than paper. This facilitates easier data manipulation, sharing among team members, and integration with analysis software.}
+    \item \textbf{Assess Quality}: If a manual review, evaluate methodological rigor using tools like the Cochrane Risk of Bias Tool or GRADE (Grading of Recommendations Assessment, Development, and Evaluation). If AI-assisted, follow approaches described in this manual.
     \item \textbf{Document Uncertainties}: Record ambiguities or missing information, often contacting original authors for clarification.
 \end{itemize}
 
-\begin{configbox}[Data Extraction Template Example]
+\begin{infobox}[Data Extraction Template Example]
 \begin{lstlisting}
 Study ID: [Reference ID]
 Citation: [Full citation in standard format]
@@ -124,9 +117,7 @@ Study Quality Assessment:
   - Key limitations: [specific methodological concerns]
 Notes: [Additional relevant information]
 \end{lstlisting}
-\end{configbox}
-
-\tip{Create your data extraction form in digital format (e.g., spreadsheet) rather than paper. This facilitates easier data manipulation, sharing among team members, and integration with analysis software.}
+\end{infobox}
 
 \subsection{Synthesis \& Analysis}
 
@@ -134,13 +125,11 @@ The final analytical phase includes:
 
 \begin{itemize}
     \item \textbf{Narrative Synthesis}: Organize and summarize findings qualitatively, identifying patterns and relationships.
-    \item \textbf{Quantitative Synthesis}: When appropriate, conduct meta-analysis to statistically combine results.
+    \item \textbf{Quantitative Synthesis}: When appropriate, conduct meta-analysis to statistically combine results.\note{Not all systematic reviews are suitable for meta-analysis. When studies use different outcome measures or have high methodological heterogeneity, narrative synthesis may be more appropriate.}
     \item \textbf{Heterogeneity Assessment}: Evaluate variations in study designs, populations, and outcomes.
     \item \textbf{Subgroup Analysis}: Explore how findings vary across different study characteristics or populations.
 \end{itemize}
-
-\note{Not all systematic reviews are suitable for meta-analysis. When studies use different outcome measures or have high methodological heterogeneity, narrative synthesis may be more appropriate.}
-
+\warning{Systematic reviews require significant time and resources. A comprehensive review typically takes 6-18 months to complete when conducted manually. Plan your timeline accordingly and consider the efficiency benefits tools like \texttt{prismAId} can provide.}
 \begin{commandbox}[R Code Example for Forest Plot Creation]
 \begin{lstlisting}[language=R]
 # Basic R code for meta-analysis and forest plot
@@ -162,8 +151,6 @@ forest(meta_analysis,
 \end{lstlisting}
 \end{commandbox}
 
-\warning{Systematic reviews require significant time and resources. A comprehensive review typically takes 6-18 months to complete when conducted manually. Plan your timeline accordingly and consider the efficiency benefits tools like \texttt{prismAId} can provide.}
-
 \section{Best Practices}
 
 Conducting high-quality systematic reviews involves adhering to several best practices:
@@ -171,24 +158,20 @@ Conducting high-quality systematic reviews involves adhering to several best pra
 \subsection{Transparency \& Reproducibility}
 
 \begin{itemize}
-    \item \textbf{Detailed Documentation}: Record all decisions, search strategies, and methods.
+    \item \textbf{Detailed Documentation}: Record all decisions, search strategies, and methods.\reminder{Document all exclusion decisions during screening. For transparency, maintain a list of studies excluded at the full-text review stage with specific reasons for exclusion.}
     \item \textbf{PRISMA Compliance}: Follow PRISMA guidelines for reporting.
     \item \textbf{Open Data}: When possible, share data extraction forms and analysis files.
 \end{itemize}
-
-\reminder{Document all exclusion decisions during screening. For transparency, maintain a list of studies excluded at the full-text review stage with specific reasons for exclusion.}
 
 \subsection{Methodological Rigor}
 
 \begin{itemize}
     \item \textbf{Comprehensive Searching}: Use multiple databases and supplementary methods like citation tracking.
-    \item \textbf{Dual Screening}: Have at least two independent reviewers screen studies, with a third resolving disagreements.
+    \item \textbf{Dual Screening}: If a manual review, have at least two independent reviewers screen studies, with a third resolving disagreements.\tip{Again if you do not want to take advantage of prismAId and you are proceeding with a manual review, before full screening, conduct a calibration exercise where all reviewers independently screen the same 5-10 studies, then compare results to ensure consistent application of criteria. This identifies misunderstandings early and improves inter-rater reliability.}
     \item \textbf{Pilot Testing}: Test screening and data extraction procedures on a subset of studies.
 \end{itemize}
 
-\tip{Before full screening, conduct a calibration exercise where all reviewers independently screen the same 50-100 studies, then compare results to ensure consistent application of criteria. This identifies misunderstandings early and improves inter-rater reliability.}
-
-\begin{configbox}[Screening Criteria Documentation]
+\begin{infobox}[Screening Criteria Documentation]
 \begin{lstlisting}
 Inclusion Criteria:
 - Population: Adults (18+) with Type 2 Diabetes
@@ -204,17 +187,16 @@ Exclusion Criteria:
 - Conference abstracts or proceedings
 - Studies without control groups
 \end{lstlisting}
-\end{configbox}
+\end{infobox}
 
 \subsection{Managing Bias}
 
 \begin{itemize}
-    \item \textbf{Publication Bias}: Search for unpublished studies and conduct funnel plot analysis when applicable.
-    \item \textbf{Selection Bias}: Use predefined, objective inclusion criteria.
-    \item \textbf{Confirmation Bias}: Have team members with diverse perspectives review the evidence.
-\end{itemize}
+    \item \textbf{Publication Bias}: Search for unpublished studies and conduct funnel plot analysis when applicable.\warning{Be cautious of language bias. Limiting searches to English-language publications can miss important evidence, particularly in fields with significant international research or regional focus.}
 
-\warning{Be cautious of language bias. Limiting searches to English-language publications can miss important evidence, particularly in fields with significant international research or regional focus.}
+    \item \textbf{Selection Bias}: Use predefined, objective inclusion criteria.
+    \item \textbf{Confirmation Bias}: If a manual review, have team members with diverse perspectives review the evidence.
+\end{itemize}
 
 \begin{commandbox}[Code for Publication Bias Assessment]
 \begin{lstlisting}[language=R]
@@ -234,31 +216,27 @@ metabias(meta_analysis, method = "linreg")
 \subsection{Team Collaboration}
 
 \begin{itemize}
-    \item \textbf{Multidisciplinary Teams}: Include subject matter experts, methodologists, and librarians.
+    \item \textbf{Multidisciplinary Teams}: Ideally, include subject matter experts, methodologists, and librarians.\note{Consulting with a research librarian can significantly improve search strategy quality. Their expertise in database syntax and controlled vocabulary (e.g., MeSH terms) helps ensure comprehensive literature identification.}\reminder{The most robust manual systematic reviews often involve teams rather than individual researchers. If working alone, consider consulting with colleagues at critical decision points to reduce subjectivity and to take advantage of prismAId.}
     \item \textbf{Regular Calibration}: Conduct ongoing discussions to ensure consistent application of criteria.
-    \item \textbf{Clear Roles}: Define responsibilities for each team member.
+    \item \textbf{Clear Roles}: If there is a team, define responsibilities for each team member.
 \end{itemize}
-
-\note{Consulting with a research librarian can significantly improve search strategy quality. Their expertise in database syntax and controlled vocabulary (e.g., MeSH terms) helps ensure comprehensive literature identification.}
-
-\reminder{The most robust systematic reviews often involve teams rather than individual researchers. If working alone, consider consulting with colleagues at critical decision points to reduce subjectivity.}
 
 \section{The Role of Technology in Systematic Reviews}
 
 Traditional systematic review methods are resource-intensive and time-consuming. Recent technological advances have created opportunities to streamline the process while maintaining methodological rigor:
 
 \begin{itemize}
-    \item \textbf{Literature Screening}: Machine learning algorithms can help prioritize relevant studies.
-    \item \textbf{Data Extraction}: Natural language processing can identify key information from texts.
+    \item \textbf{Literature Screening}: Machine learning algorithms can help prioritize relevant studies.\tip{Even with technological assistance, allocate time for pilot testing and validation. Test \texttt{prismAId} with a small subset of your literature before processing your entire dataset.}
+    \item \textbf{Data Extraction}: Natural language processing can identify key information from texts. This is what the prismAId Review function does.
     \item \textbf{Evidence Synthesis}: Automated tools can assist in organizing and analyzing extracted data.
-    \item \textbf{Protocol Management}: Specialized software can guide teams through the systematic review workflow.
+    \item \textbf{Protocol Management}: Specialized software can guide teams through the systematic review workflow. Other prismAId functions like Download and Convert support specific steps of the workflow.
 \end{itemize}
 
-\texttt{prismAId} represents a significant evolution in this technological landscape, leveraging advanced large language models to assist with multiple phases of the systematic review process.\tip{Even with technological assistance, allocate time for pilot testing and validation. Test \texttt{prismAId} with a small subset of your literature before processing your entire dataset.}
+\texttt{prismAId} contributes to the evolution of this technological landscape, leveraging advanced large language models to assist with data extraction in the systematic review process.
 
 \subsection{Benefits of Technology-Assisted Reviews}
 
-Technology-assisted systematic reviews offer several advantages:
+Technology-assisted systematic reviews offer several advantages:\warning{While AI tools like \texttt{prismAId} significantly enhance efficiency, human oversight remains essential. AI systems may miss nuanced information or misinterpret specialized terminology. Always validate AI-extracted data against source documents.}
 
 \begin{itemize}
     \item \textbf{Increased Efficiency}: Reducing time required for screening and data extraction.
@@ -267,33 +245,12 @@ Technology-assisted systematic reviews offer several advantages:
     \item \textbf{Better Reproducibility}: Creating structured, traceable processes.
 \end{itemize}
 
-\begin{configbox}[Typical Efficiency Gains with Technology]
-\begin{lstlisting}
-Task           | Traditional Method | Technology-Assisted | Potential Time Saved
----------------|-------------------|--------------------|------------------
-Title/Abstract | ~1-2 min per      | ~30-60 sec per     | 50-75%
-Screening      | reference         | reference          |
----------------|-------------------|--------------------|------------------
-Data           | ~20-40 min per    | ~5-15 min per      | 60-80%
-Extraction     | study             | study              |
----------------|-------------------|--------------------|------------------
-Evidence       | Days to weeks     | Hours to days      | 70-90%
-Synthesis      |                   |                    |
-\end{lstlisting}
-\end{configbox}
-
-\warning{While AI tools like \texttt{prismAId} significantly enhance efficiency, human oversight remains essential. AI systems may miss nuanced information or misinterpret specialized terminology. Always validate AI-extracted data against source documents.}
-
 \section{Conclusion}
 
-Systematic reviews are cornerstone methods for evidence synthesis across scientific disciplines. By following rigorous methodologies and best practices, researchers can produce high-quality reviews that reliably inform decision-making and future research directions.
+\tip{Start small and scale up. If you're new to systematic reviews, consider conducting a scoping review or rapid review on a narrow topic before undertaking a comprehensive systematic review.}Systematic reviews are cornerstone methods for evidence synthesis across scientific disciplines. By following rigorous methodologies and best practices, researchers can produce high-quality reviews that reliably inform decision-making and future research directions.
 
-\tip{Start small and scale up. If you're new to systematic reviews, consider conducting a scoping review or rapid review on a narrow topic before undertaking a comprehensive systematic review.}
 
-\texttt{prismAId} is designed to support this methodology by automating labor-intensive aspects of the review process while maintaining the methodological rigor that makes systematic reviews valuable. In the following chapters, we'll explore how to harness \texttt{prismAId}'s capabilities to conduct efficient, protocol-driven systematic reviews.
-
-\reminder{Even the most sophisticated tools can't replace critical thinking. Use \texttt{prismAId} to handle repetitive tasks, but apply your subject expertise to interpret findings in context and derive meaningful conclusions.}
-
+\reminder{Even the most sophisticated tools can't replace critical thinking. Use \texttt{prismAId} to handle repetitive tasks, but apply your subject expertise to interpret findings in context and derive meaningful conclusions.}\texttt{prismAId} is designed to support this methodology by automating labor-intensive, error-prone, and intrinsically subjective aspects of the review process while maintaining and enhancing the methodological rigor that makes systematic reviews valuable. In the following chapters, we'll explore how to harness \texttt{prismAId}'s capabilities to conduct efficient, protocol-driven systematic reviews.
 
 
 \chapter[Step-by-Step to a Systematic Review]{Step-by-Step Guide to Conducting a Systematic Review} \label{chap:walkthrough}
@@ -304,17 +261,18 @@ This chapter provides a comprehensive, practical walkthrough of conducting a sys
 
 Before diving into the technical aspects, proper project planning is essential for a successful systematic review.
 
-\subsection{Define Your Research Question}
+\subsection{Sketch Your Research Question}
 
 \begin{enumerate}
-    \item Formulate a clear, focused research question using a framework like PICO.
-    \item Define the scope of your review (time period, study types, etc.).
-    \item Determine what specific information you need to extract from each paper.
+    \item Formulate a clear, focused research question using a framework like PICO.\tip{Well-defined research questions lead to more precise information extraction. Be specific about what you want to learn from the literature.}
+    \item Outline the scope of your review (time period, study types, etc.).
+    \item Determine what specific information you need to extract from each paper.\note{Iterative piloting, learning, narrowing the focus, and simplifying research questions, search queries, and methodological design are crucial for achieving higher quality and replicability standards.}
 \end{enumerate}
 
-\tip{Well-defined research questions lead to more precise information extraction. Be specific about what you want to learn from the literature.}
+To support better scoping of your future work, it is helpful to fill in and revise a review registration. Beyond being an important step in the review process, using a registration template helps focus on the right questions and identify issues that need clarification.
 
 \subsection{Create a Project Directory Structure}
+\reminder{A well-organized directory structure makes it easier to track your workflow and prevents confusion between original documents and processed files.}
 
 \begin{commandbox}[Command: Creating a Project Directory Structure]
 \begin{lstlisting}[language=Bash]
@@ -329,76 +287,13 @@ mkdir my_systematic_review/results
 \end{lstlisting}
 \end{commandbox}
 
-\reminder{A well-organized directory structure makes it easier to track your workflow and prevents confusion between original documents and processed files.}
+\section{Importing and Managing Manuscripts}
 
-\subsection{Configure Your Project}
-
-\begin{enumerate}
-    \item Generate a basic configuration file using the \texttt{prismAId} initializer.
-    \item Customize the configuration file to match your research questions.
-\end{enumerate}
-
-\begin{commandbox}[Command: Initializing a Project Configuration]
-\begin{lstlisting}[language=Bash]
-# Navigate to your project directory
-cd my_systematic_review
-
-# Initialize a new configuration file
-./prismaid -init
-\end{lstlisting}
-\end{commandbox}
-
-\note{Alternatively, you can use the web-based configurator at \href{https://open-and-sustainable.github.io/prismaid/review-configurator.html}{open-and-sustainable.github.io/prismaid/review-configurator.html} to create your configuration file with a user-friendly interface.}
-
-\begin{configbox}[Configuration: Essential Project Settings]
-\begin{lstlisting}[language=TOML]
-[project]
-name = "Effects of Climate Change on Agricultural Yields"
-author = "Jane Researcher"
-version = "1.0"
-
-[project.configuration]
-input_directory = "/home/user/my_systematic_review/papers_txt"
-results_file_name = "/home/user/my_systematic_review/results/findings"
-output_format = "csv"
-log_level = "medium"
-duplication = "no"
-cot_justification = "yes"
-summary = "yes"
-\end{lstlisting}
-\end{configbox}
-
-\warning{Always use absolute paths in your configuration file to prevent path-related errors. Relative paths can cause issues when running \texttt{prismAId} from different directories.}
-
-\subsection{Configure LLM Settings}
-
-\begin{enumerate}
-    \item Obtain API key(s) from your preferred LLM provider(s).
-    \item Set up environment variables or add keys to your configuration file.
-    \item Define model settings based on your needs and budget.
-\end{enumerate}
-
-\begin{configbox}[Configuration: LLM Provider Setup]
-\begin{lstlisting}[language=TOML]
-[project.llm.1]
-provider = "OpenAI"
-api_key = "" # Leave empty to use environment variable
-model = "gpt-4o-mini"
-temperature = 0.01
-tpm_limit = 0
-rpm_limit = 0
-\end{lstlisting}
-\end{configbox}
-
-\tip{Using a lower temperature setting (0.01-0.1) produces more consistent results, which is generally preferable for systematic reviews where reproducibility is important.}
-
-\section{Importing and Managing Data}
-
-Once your project is set up, you'll need to gather and prepare your literature for analysis.
+Once your project and search are set up, you'll need to gather and prepare your literature for analysis.
 
 \subsection{Literature Acquisition using the Download Tool}
 
-\subsubsection{Option 1: Downloading from Zotero}
+\subsubsection{Option 1: Downloading from Zotero}\warning{Manuscripts are often protected by copyright. Make sure to respect all applicable rights and use them only within permitted conditions.}
 
 \begin{enumerate}
     \item Prepare your Zotero collection with all papers for your systematic review.
@@ -468,6 +363,7 @@ cd my_systematic_review
 \end{lstlisting}
 \end{commandbox}
 
+\reminder{Always manually check a sample of converted files to ensure the conversion quality is acceptable. PDFs with complex layouts or scanned images may not convert perfectly.}
 \begin{commandbox}[Command: Converting Multiple File Types]
 \begin{lstlisting}[language=Bash]
 # For DOCX files
@@ -478,17 +374,111 @@ cd my_systematic_review
 \end{lstlisting}
 \end{commandbox}
 
-\reminder{Always manually check a sample of converted files to ensure the conversion quality is acceptable. PDFs with complex layouts or scanned images may not convert perfectly.}
-
 \subsection{Organizing Your Literature Collection}
 
 \begin{enumerate}
-    \item Review the converted text files for quality and completeness.
+    \item Review the converted text files for quality and completeness.\tip{Consider removing unnecessary sections from converted texts, such as references or acknowledgments, to reduce token usage and improve extraction accuracy.}
     \item Remove or fix any problematic conversions.
     \item Optionally, rename files for better organization and tracking.
 \end{enumerate}
 
-\tip{Consider removing unnecessary sections from converted texts, such as references or acknowledgments, to reduce token usage and improve extraction accuracy.}
+
+\subsection{Configure Your Project}
+
+\begin{enumerate}
+    \item Generate a basic configuration file using the \texttt{prismAId} initializer.
+    \item Customize the configuration file to match your research questions.
+\end{enumerate}
+
+You can follow templates and example or create a new project configuration interactively or by using the web-based configurator.
+
+\subsubsection{Interactive Terminal Setup}
+
+\begin{commandbox}[Command: Creating a New Project]
+Run the following command:
+\begin{lstlisting}[language=Bash]
+./prismaid -init
+\end{lstlisting}
+\end{commandbox}
+
+This prompts you with multiple questions and generates a TOML configuration file.\reminder{Always keep a backup of your configuration file before making major modifications.}
+
+\subsubsection{Web-Based Setup}
+
+Alternatively, use the web-based configurator available at \href{https://open-and-sustainable.github.io/prismaid/review-configurator.html}{open-and-sustainable.github.io/prismaid/review-configurator.html} to create your configuration file interactively in a browser.
+
+\begin{configbox}[Configuration: Example of Initial Sections of a Configuration]
+To configure \texttt{prismAId}, edit the generated \texttt{your\_project.toml} file:
+\begin{lstlisting}[language=TOML]
+[project]
+name = "Use of LLM for systematic review"
+author = "John Doe"
+version = "1.0"
+
+[project.configuration]
+input_directory = "/path/to/txt/files"
+results_file_name = "/path/to/save/results"
+output_format = "json"
+log_level = "low"
+duplication = "no"
+cot_justification = "no"
+summary = "no"
+\end{lstlisting}
+\end{configbox}
+
+\begin{commandbox}[Command: Initializing a Project Configuration]
+\begin{lstlisting}[language=Bash]
+# Navigate to your project directory
+cd my_systematic_review
+
+# Initialize a new configuration file
+./prismaid -init
+\end{lstlisting}
+\end{commandbox}
+
+\note{Alternatively, you can use the web-based configurator at \href{https://open-and-sustainable.github.io/prismaid/review-configurator.html}{open-and-sustainable.github.io/prismaid/review-configurator.html} to create your configuration file with a user-friendly interface.}
+
+\begin{configbox}[Configuration: Essential Project Settings]
+\begin{lstlisting}[language=TOML]
+[project]
+name = "Effects of Climate Change on Agricultural Yields"
+author = "Jane Researcher"
+version = "1.0"
+
+[project.configuration]
+input_directory = "/home/user/my_systematic_review/papers_txt"
+results_file_name = "/home/user/my_systematic_review/results/findings"
+output_format = "csv"
+log_level = "medium"
+duplication = "no"
+cot_justification = "yes"
+summary = "yes"
+\end{lstlisting}
+\end{configbox}
+
+\warning{Always use absolute paths in your configuration file to prevent path-related errors. Relative paths can cause issues when running \texttt{prismAId} from different directories.}
+
+\subsection{Configure LLM Settings}
+
+\begin{enumerate}
+    \item Obtain API key(s) from your preferred LLM provider(s).
+    \item Set up environment variables or add keys to your configuration file.
+    \item Define model settings based on your needs and budget.
+\end{enumerate}
+
+\begin{configbox}[Configuration: LLM Provider Setup]
+\begin{lstlisting}[language=TOML]
+[project.llm.1]
+provider = "OpenAI"
+api_key = "" # Leave empty to use environment variable
+model = "gpt-4o-mini"
+temperature = 0.01
+tpm_limit = 0
+rpm_limit = 0
+\end{lstlisting}
+\end{configbox}
+
+\tip{Using a lower temperature setting (0.01-0.1) produces more consistent results, which is generally preferable for systematic reviews where reproducibility is important.}
 
 \section{Running Analyses}
 
@@ -561,6 +551,7 @@ cd my_systematic_review
     \item Address any errors or warnings that appear during processing.
 \end{enumerate}
 
+\warning{Long-running reviews may encounter API rate limits. Use the `tpm\_limit` and `rpm\_limit` settings in your configuration to manage API usage and avoid interruptions.}
 \begin{commandbox}[Command: Running with Detailed Logging]
 \begin{lstlisting}[language=Bash]
 # First modify your config file to set log_level to "high"
@@ -568,8 +559,6 @@ cd my_systematic_review
 ./prismaid -project config/climate_yield_review.toml
 \end{lstlisting}
 \end{commandbox}
-
-\warning{Long-running reviews may encounter API rate limits. Use the `tpm\_limit` and `rpm\_limit` settings in your configuration to manage API usage and avoid interruptions.}
 
 \section{Interpreting Results}
 
@@ -599,10 +588,10 @@ paper3.txt,multiple,multiple factors,varied by region and crop,yes,mixed
 \begin{enumerate}
     \item Randomly select a subset of papers for manual validation.
     \item Compare the extracted information with the original papers.
+    \tip{Aim to manually validate at least 10-20\% of your papers to ensure extraction quality. Focus particularly on papers with unusual or unexpected results.}
+
     \item Note any discrepancies or patterns in extraction errors.
 \end{enumerate}
-
-\tip{Aim to manually validate at least 10-20\% of your papers to ensure extraction quality. Focus particularly on papers with unusual or unexpected results.}
 
 \subsection{Analyzing Patterns and Trends}
 
@@ -612,6 +601,7 @@ paper3.txt,multiple,multiple factors,varied by region and crop,yes,mixed
     \item Identify patterns, relationships, and outliers.
 \end{enumerate}
 
+\note{Extracting numerical data from free-text fields like `yield\_impact` may require additional processing before quantitative analysis.}
 \begin{commandbox}[Example R Code for Basic Analysis]
 \begin{lstlisting}[language=R]
 # Load libraries
@@ -637,7 +627,6 @@ results %>%
 \end{lstlisting}
 \end{commandbox}
 
-\note{Extracting numerical data from free-text fields like `yield\_impact` may require additional processing before quantitative analysis.}
 
 \section{Exporting Findings}
 
@@ -647,7 +636,7 @@ The final step is to prepare your findings for presentation, publication, or fur
 
 \begin{enumerate}
     \item Create summary tables of key findings.
-    \item Format the data appropriately for your target audience.
+    \item Format the data appropriately for your target audience.\tip{Include both raw data and processed summary tables in your publications to enhance transparency and reproducibility.}
     \item Include relevant metadata about your review process.
 \end{enumerate}
 
@@ -681,10 +670,9 @@ plt.savefig("results/crop_climate_summary.png", dpi=300)
 \end{lstlisting}
 \end{commandbox}
 
-\tip{Include both raw data and processed summary tables in your publications to enhance transparency and reproducibility.}
-
 \subsection{Documenting Your Methodology}
 
+\reminder{For publication, include your full \texttt{prismAId} configuration file (with API keys removed) in supplementary materials to enhance reproducibility.}
 \begin{enumerate}
     \item Document your complete review methodology.
     \item Include details about:
@@ -698,10 +686,9 @@ plt.savefig("results/crop_climate_summary.png", dpi=300)
     \item Save your configuration files alongside your results.
 \end{enumerate}
 
-\reminder{For publication, include your full \texttt{prismAId} configuration file (with API keys removed) in supplementary materials to enhance reproducibility.}
-
 \subsection{Visualizing Results}
 
+\warning{Be cautious about drawing causal conclusions from your systematic review findings, especially when AI-assisted tools are used for extraction. Clearly acknowledge limitations in your reporting.}
 \begin{enumerate}
     \item Create appropriate visualizations based on your data type.
     \item Consider common visualization types:
@@ -714,15 +701,13 @@ plt.savefig("results/crop_climate_summary.png", dpi=300)
     \item Ensure visualizations accurately represent your findings.
 \end{enumerate}
 
-\warning{Be cautious about drawing causal conclusions from your systematic review findings, especially when AI-assisted tools are used for extraction. Clearly acknowledge limitations in your reporting.}
-
 \subsection{Preparing for Publication}
 
 \begin{enumerate}
     \item Format your findings according to journal or conference requirements.
     \item Follow PRISMA or other appropriate reporting guidelines.
     \item Create a PRISMA flow diagram documenting the review process.
-    \item Properly cite \texttt{prismAId} in your methodology section.
+    \item Properly cite \texttt{prismAId} in your methodology section.\note{Some journals may have specific requirements or guidelines for reporting AI-assisted analyses. Check with your target journal for any specific policies.}
 \end{enumerate}
 
 \begin{commandbox}[Example Citation for prismAId]
@@ -738,8 +723,6 @@ Protocol-Based Literature Reviews. Zenodo.
 https://doi.org/10.5281/zenodo.11210796
 \end{lstlisting}
 \end{commandbox}
-
-\note{Some journals may have specific requirements or guidelines for reporting AI-assisted analyses. Check with your target journal for any specific policies.}
 
 \section{Conclusion}
 
