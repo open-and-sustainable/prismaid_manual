@@ -8,7 +8,7 @@ This chapter explains how to install \texttt{prismAId}, covering system requirem
 Before installing \texttt{prismAId}, ensure your system meets the following requirements:\warning{Ensure that you have administrative privileges on your system before installing \texttt{prismAId}, especially on Windows and macOS.}
 
 \begin{itemize}
-    \item \textbf{Operating System}: Windows 10 or later, macOS 11 or later, or a Linux distribution (Ubuntu 20.04+, Fedora, Arch, etc.).
+    \item \textbf{Operating System}: Windows 10 or later, macOS 11 or later, or a Linux distribution (Arch, Debian, Fedora, Ubuntu, etc.).
     \item \textbf{Processor}: 64-bit CPU (Intel, AMD, or ARM64).
     \item \textbf{Memory}: At least 4GB RAM (8GB recommended).
     \item \textbf{Storage}: Minimum 500MB of free disk space.
@@ -18,7 +18,8 @@ Before installing \texttt{prismAId}, ensure your system meets the following requ
 
 \section{Installation Methods}
 
-\texttt{prismAId} can be installed in multiple ways, depending on your preferences and workflow requirements. Choose the method that best suits your needs.
+\texttt{prismAId} can be installed in multiple ways, depending on your preferences and workflow requirements.\warning{The capitalization of the letters in the prismAId tool follows the conventions of each programming language, ensuring consistency within each context but resulting in variations across packages and languages.}
+ Choose the method that best suits your needs.
 
 \subsection{Method 1: Standalone Binaries}
 
@@ -27,7 +28,8 @@ The simplest installation method is to download the pre-compiled binaries, which
 \begin{enumerate}
     \item Navigate to the \href{https://github.com/open-and-sustainable/prismaid/releases}{GitHub Releases page}.
     \item Download the appropriate binary for your operating system.
-    \item Extract the file to a directory of your choice.
+    \item Place the file into a directory of your choice.
+    \item On Linux and macOS, set the binaries as executable files.
 \end{enumerate}
 
 \subsubsection{Windows}
@@ -35,9 +37,6 @@ The simplest installation method is to download the pre-compiled binaries, which
 \begin{commandbox}[Command: Running \texttt{prismAId} on Windows]
 After downloading, navigate to the folder and run:
 \begin{lstlisting}[language=Bash]
-# Run the Review tool with a project configuration
-./prismaid.exe -project your_project.toml
-
 # Download papers from Zotero
 ./prismaid.exe -download-zotero zotero_config.toml
 
@@ -46,6 +45,9 @@ After downloading, navigate to the folder and run:
 
 # Convert PDF files to text
 ./prismaid.exe -convert-pdf ./papers
+
+# Run the Review tool with a project configuration
+./prismaid.exe -project your_project.toml
 \end{lstlisting}
 \end{commandbox}
 
@@ -56,7 +58,6 @@ After downloading, navigate to the folder and run:
 After downloading, give execution permissions and run:
 \begin{lstlisting}[language=Bash]
 chmod +x prismaid
-./prismaid -project your_project.toml
 
 # Download papers from Zotero
 ./prismaid -download-zotero zotero_config.toml
@@ -65,6 +66,9 @@ chmod +x prismaid
 ./prismaid -convert-pdf ./papers
 ./prismaid -convert-docx ./papers
 ./prismaid -convert-html ./papers
+
+# Run the Review tool with a project configuration
+./prismaid -project your_project.toml
 \end{lstlisting}
 \end{commandbox}
 
@@ -73,13 +77,15 @@ chmod +x prismaid
 \begin{commandbox}[Command: Running \texttt{prismAId} on Linux]
 \begin{lstlisting}[language=Bash]
 chmod +x prismaid
-./prismaid -project your_project.toml
 
 # Initialize a new project configuration interactively
 ./prismaid -init
 
 # Download papers from a URL list
 ./prismaid -download-URL paper_urls.txt
+
+# Run the Review tool with a project configuration
+./prismaid -project your_project.toml
 \end{lstlisting}
 \end{commandbox}
 
@@ -98,9 +104,6 @@ go get "github.com/open-and-sustainable/prismaid"
 \begin{lstlisting}[language=Go]
 import "github.com/open-and-sustainable/prismaid"
 
-// Run a systematic review
-err := prismaid.Review(tomlConfigString)
-
 // Download papers from Zotero
 err := prismaid.DownloadZoteroPDFs(username, apiKey, collectionName, parentDir)
 
@@ -109,6 +112,9 @@ err := prismaid.DownloadURLList("path/to/urls.txt")
 
 // Convert files to text
 err := prismaid.Convert(inputDir, "pdf,docx,html")
+
+// Run a systematic review
+err := prismaid.Review(tomlConfigString)
 \end{lstlisting}
 \end{commandbox}
 
@@ -126,11 +132,6 @@ pip install prismaid
 \begin{lstlisting}[language=Python]
 import prismaid
 
-# Run a systematic review
-with open("project.toml", "r") as file:
-    toml_config = file.read()
-prismaid.review(toml_config)
-
 # Download papers from Zotero
 prismaid.download_zotero_pdfs("username", "api_key", "collection_name", "./papers")
 
@@ -139,6 +140,11 @@ prismaid.download_url_list("urls.txt")
 
 # Convert files to text
 prismaid.convert("./papers", "pdf,docx,html")
+
+# Run a systematic review
+with open("project.toml", "r") as file:
+    toml_config = file.read()
+prismaid.review(toml_config)
 \end{lstlisting}
 \end{commandbox}
 
@@ -156,10 +162,6 @@ install.packages("prismaid", repos = c("https://open-and-sustainable.r-universe.
 \begin{lstlisting}[language=R]
 library(prismaid)
 
-# Run a systematic review
-toml_content <- paste(readLines("project.toml"), collapse = "\n")
-RunReview(toml_content)  # Note the capitalization
-
 # Download papers from Zotero
 DownloadZoteroPDFs("username", "api_key", "collection_name", "./papers")
 
@@ -168,12 +170,16 @@ DownloadURLList("urls.txt")
 
 # Convert files to text
 Convert("./papers", "pdf,docx,html")
+
+# Run a systematic review
+toml_content <- paste(readLines("project.toml"), collapse = "\n")
+RunReview(toml_content)  # Note the capitalization
 \end{lstlisting}
 \end{commandbox}
 
 \subsection{Method 5: Julia Package}
 
-For Julia users, \texttt{prismAId} is available as a package.\note{The Julia package works on Linux and Windows AMD64, and macOS Arm64.}
+For Julia users, \texttt{prismAId} is available as a package published in the Julia General Registry.\note{The Julia package works on Linux and Windows AMD64, and macOS Arm64.}
 
 \begin{commandbox}[Command: Installing the Julia Package]
 \begin{lstlisting}[language=Julia]
@@ -186,10 +192,6 @@ Pkg.add("PrismAId")
 \begin{lstlisting}[language=Julia]
 using PrismAId
 
-# Run a systematic review
-toml_config = read("project.toml", String)
-PrismAId.run_review(toml_config)
-
 # Download papers from Zotero
 PrismAId.download_zotero_pdfs("username", "api_key", "collection_name", "./papers")
 
@@ -198,6 +200,10 @@ PrismAId.download_url_list("urls.txt")
 
 # Convert files to text
 PrismAId.convert("./papers", "pdf,docx,html")
+
+# Run a systematic review
+toml_config = read("project.toml", String)
+PrismAId.run_review(toml_config)
 \end{lstlisting}
 \end{commandbox}
 
@@ -208,11 +214,11 @@ To use the Review tool of \texttt{prismAId}, you need to set up API keys for at 
 \subsection{Obtaining API Keys}
 
 \begin{itemize}
-    \item \textbf{OpenAI}: Register at \href{https://www.openai.com/}{openai.com} and obtain an API key from your account dashboard.
-    \item \textbf{GoogleAI}: Create an account at \href{https://aistudio.google.com}{aistudio.google.com} and generate an API key.
-    \item \textbf{Cohere}: Sign up at \href{https://cohere.com/}{cohere.com} and retrieve your API key from the dashboard.
     \item \textbf{Anthropic}: Register at \href{https://www.anthropic.com/}{anthropic.com} and generate an API key.
+    \item \textbf{Cohere}: Sign up at \href{https://cohere.com/}{cohere.com} and retrieve your API key from the dashboard.
     \item \textbf{DeepSeek}: Create an account at \href{https://platform.deepseek.com/}{platform.deepseek.com} and obtain an API key.
+    \item \textbf{GoogleAI}: Create an account at \href{https://aistudio.google.com}{aistudio.google.com} and generate an API key.
+    \item \textbf{OpenAI}: Register at \href{https://www.openai.com/}{openai.com} and obtain an API key from your account dashboard.
 \end{itemize}
 
 \subsection{Configuring API Keys}
@@ -244,7 +250,7 @@ export DEEPSEEK_API_KEY="your-deepseek-api-key"
 
 \subsubsection{Configuration File}
 
-Add your API keys directly in the TOML configuration file:
+Add your API keys directly in the TOML configuration file:\warning{Do not share or publish configuration files containing API keys. Always remove them before sharing.}
 
 \begin{configbox}[Configuration: API Keys in TOML]
 \begin{lstlisting}[language=TOML]
@@ -260,44 +266,6 @@ rpm_limit = 0
 
 \tip{If both environment variables and configuration file entries are present, the configuration file values take priority.}
 
-\section{First-Time Setup}
-
-After installation, create a new project configuration. This can be done interactively or by using the web-based configurator.
-
-\subsection{Interactive Terminal Setup}
-
-\begin{commandbox}[Command: Creating a New Project]
-Run the following command:
-\begin{lstlisting}[language=Bash]
-./prismaid -init
-\end{lstlisting}
-\end{commandbox}
-
-This prompts you with multiple questions and generates a TOML configuration file.\reminder{Always keep a backup of your configuration file before making major modifications.}
-
-\subsection{Web-Based Setup}
-
-Alternatively, use the web-based configurator available at \href{https://open-and-sustainable.github.io/prismaid/review-configurator.html}{open-and-sustainable.github.io/prismaid/review-configurator.html} to create your configuration file interactively in a browser.
-
-\begin{configbox}[Configuration: Example of Initial Sections of a Configuration]
-To configure \texttt{prismAId}, edit the generated \texttt{your\_project.toml} file:
-\begin{lstlisting}[language=TOML]
-[project]
-name = "Use of LLM for systematic review"
-author = "John Doe"
-version = "1.0"
-
-[project.configuration]
-input_directory = "/path/to/txt/files"
-results_file_name = "/path/to/save/results"
-output_format = "json"
-log_level = "low"
-duplication = "no"
-cot_justification = "no"
-summary = "no"
-\end{lstlisting}
-\end{configbox}
-
 \section{Verifying the Installation}
 
 Check if \texttt{prismAId} is correctly installed:\note{If you encounter issues, refer to the troubleshooting section or seek help from the community through GitHub issues or the Matrix Support Room.}
@@ -305,7 +273,7 @@ Check if \texttt{prismAId} is correctly installed:\note{If you encounter issues,
 \begin{commandbox}[Command: Verifying Installation]
 \begin{lstlisting}[language=Bash]
 # For binaries
-./prismaid --version
+./prismaid --help
 
 # For Python
 python -c "import prismaid; print(prismaid.__version__)"
@@ -320,9 +288,9 @@ julia -e "using PrismAId; println(PrismAId.version())"
 
 \section{Use in Jupyter Notebooks}
 
-When using prismAId in Jupyter notebooks with Python (versions ≤ 0.6.6), special handling may be required for interactive prompts:
+When using prismAId (versions ≤ 0.6.6) in Jupyter notebooks with Python, special handling may be required for interactive prompts:
 
-\begin{commandbox}[Code: Using prismAId in Jupyter Notebooks]
+\begin{commandbox}[Code: Using prismAId v < 0.6.6 in Jupyter Notebooks]
 \begin{lstlisting}[language=Python]
 import pty
 import os
