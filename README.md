@@ -12,14 +12,13 @@ Welcome to the **prismAId User Manual**! This guide explains how to install, con
 - 🔹 **PART I: INTRODUCTION**  
   - Introduction to *prismAId*  
 - 🔹 **PART II: GETTING STARTED**  
-  - Installation & Setup  
-  - Configuring *prismAId*  
+  - Installation & Setup   
 - 🔹 **PART III: CONDUCTING A SYSTEMATIC REVIEW**  
   - Understanding Systematic Reviews  
   - Step-by-Step Guide to Conducting a Systematic Review  
 - 🔹 **PART IV: ADVANCED FEATURES**  
-  - Customization and Automation  
-  - Extending *prismAId*  
+  - Advanced Features: Ensemble Reviews  
+  - Advanced Features: Debugging, Cost Management & Integration  
 - 🔹 **PART V: TROUBLESHOOTING & FAQS**  
   - Troubleshooting Common Issues  
   - Frequently Asked Questions  
