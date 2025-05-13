@@ -183,7 +183,7 @@ The individual model files contain the standard extraction results. Analyzing th
 
 To analyze the level of agreement between models:\tip{For categorical variables, Cohen's kappa or Fleiss' kappa (for more than two models) can provide a more sophisticated measure of inter-model agreement than simple percentage agreement.}
 
-\begin{commandbox}[R Code for Analyzing Model Agreement: Part 1]
+\begin{commandbox}[R Code for Analyzing Model Agreement]
 \begin{lstlisting}[language=R]
 library(tidyverse)
 
@@ -211,10 +211,7 @@ comparison <- model1 %>%
              climate_factor_model3 = climate_factor),
     by = "filename"
   )
-\end{lstlisting}
-\end{commandbox}
-\begin{commandbox}[R Code for Analyzing Model Agreement: Part 2]
-\begin{lstlisting}[language=R]
+
 # Calculate agreement for categorical variables
 comparison <- comparison %>%
   mutate(
@@ -250,7 +247,7 @@ print(agreement_summary)
 
 Visualizations can help identify patterns of agreement and disagreement:\note{For numerical data extraction (like percentages or measurements), consider using scatterplots to visualize the correlation between values extracted by different models, or boxplots to show the distribution of values across models.}
 
-\begin{commandbox}[Python Code for Visualizing Ensemble Agreement: Part 1]
+\begin{commandbox}[Python Code for Visualizing Ensemble Agreement]
 \begin{lstlisting}[language=Python]
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -274,10 +271,7 @@ comparison['agreement_count'] = comparison.apply(
     lambda row: len(set([row['OpenAI'], row['GoogleAI'], row['Anthropic']])),
     axis=1
 )
-\end{lstlisting}
-\end{commandbox}
-\begin{commandbox}[Python Code for Visualizing Ensemble Agreement: Part 2]
-\begin{lstlisting}[language=Python]
+
 # Create a heatmap of disagreements
 # Convert to wide format with models as columns and papers as rows
 heatmap_data = comparison.set_index('filename')[['OpenAI', 'GoogleAI', 'Anthropic']]
@@ -325,7 +319,7 @@ When models disagree on extracted information, several strategies can be employe
     \item \textbf{Model-Specific Trust}: For certain types of information, one model may consistently outperform others.
 \end{itemize}
 
-\begin{commandbox}[Python Code for Majority Voting: Part 1]
+\begin{commandbox}[Python Code for Majority Voting]
 \begin{lstlisting}[language=Python]
 import pandas as pd
 from collections import Counter
@@ -358,10 +352,7 @@ for field in ['crop_type', 'climate_factor', 'adaptation_strategies_discussed']:
             model3[field].fillna('')
         )
     ]
-\end{lstlisting}
-\end{commandbox}
-\begin{commandbox}[Python Code for Majority Voting: Part 2]
-\begin{lstlisting}[language=Python]
+
 # For numerical fields, take the median
 for field in ['yield_impact_percentage']:
     try:

@@ -294,7 +294,7 @@ Once your project and search are set up, you'll need to gather and prepare your 
 \subsection{Literature Acquisition using the Download Tool}
 
 \subsubsection{Option 1: Downloading from Zotero}\warning{Manuscripts are often protected by copyright. Make sure to respect all applicable rights and use them only within permitted conditions.}
-
+\note{The collection path in Zotero follows a filesystem-like format. For example, "Parent Collection/Sub Collection" or "Group Name/Collection Name" for group libraries.}
 \begin{enumerate}
     \item Prepare your Zotero collection with all papers for your systematic review.
     \item Obtain your Zotero user ID and API key.
@@ -320,10 +320,8 @@ cd my_systematic_review
 \end{lstlisting}
 \end{commandbox}
 
-\note{The collection path in Zotero follows a filesystem-like format. For example, "Parent Collection/Sub Collection" or "Group Name/Collection Name" for group libraries.}
-
 \subsubsection{Option 2: Downloading from URL Lists}
-
+\warning{Some publishers may restrict automatic downloads. Ensure you have appropriate access rights to all papers before attempting to download them.}
 \begin{enumerate}
     \item Create a text file with one URL per line for papers you want to download.
     \item Run the URL download command to fetch all papers.
@@ -347,7 +345,7 @@ cd my_systematic_review
 \end{lstlisting}
 \end{commandbox}
 
-\warning{Some publishers may restrict automatic downloads. Ensure you have appropriate access rights to all papers before attempting to download them.}
+
 
 \subsection{Document Conversion using the Convert Tool}
 
@@ -393,7 +391,7 @@ cd my_systematic_review
 You can follow templates and example or create a new project configuration interactively or by using the web-based configurator.
 
 \subsubsection{Interactive Terminal Setup}
-
+\reminder{Always keep a backup of your configuration file before making major modifications.}
 \begin{commandbox}[Command: Creating a New Project]
 Run the following command:
 \begin{lstlisting}[language=Bash]
@@ -401,7 +399,7 @@ Run the following command:
 \end{lstlisting}
 \end{commandbox}
 
-This prompts you with multiple questions and generates a TOML configuration file.\reminder{Always keep a backup of your configuration file before making major modifications.}
+This prompts you with multiple questions and generates a TOML configuration file.
 
 \subsubsection{Web-Based Setup}
 
@@ -425,7 +423,7 @@ cot_justification = "no"
 summary = "no"
 \end{lstlisting}
 \end{configbox}
-
+\note{Alternatively, you can use the web-based configurator at \href{https://open-and-sustainable.github.io/prismaid/review-configurator.html}{open-and-sustainable.github.io/prismaid/review-configurator.html} to create your configuration file with a user-friendly interface.}
 \begin{commandbox}[Command: Initializing a Project Configuration]
 \begin{lstlisting}[language=Bash]
 # Navigate to your project directory
@@ -436,8 +434,7 @@ cd my_systematic_review
 \end{lstlisting}
 \end{commandbox}
 
-\note{Alternatively, you can use the web-based configurator at \href{https://open-and-sustainable.github.io/prismaid/review-configurator.html}{open-and-sustainable.github.io/prismaid/review-configurator.html} to create your configuration file with a user-friendly interface.}
-
+\warning{Always use absolute paths in your configuration file to prevent path-related errors. Relative paths can cause issues when running \texttt{prismAId} from different directories.}
 \begin{configbox}[Configuration: Essential Project Settings]
 \begin{lstlisting}[language=TOML]
 [project]
@@ -456,12 +453,11 @@ summary = "yes"
 \end{lstlisting}
 \end{configbox}
 
-\warning{Always use absolute paths in your configuration file to prevent path-related errors. Relative paths can cause issues when running \texttt{prismAId} from different directories.}
 
 \subsection{Configure LLM Settings}
 
 \begin{enumerate}
-    \item Obtain API key(s) from your preferred LLM provider(s).
+    \item Obtain API key(s) from your preferred LLM provider(s).\tip{Using a lower temperature setting (0.01-0.1) produces more consistent results, which is generally preferable for systematic reviews where reproducibility is important.}
     \item Set up environment variables or add keys to your configuration file.
     \item Define model settings based on your needs and budget.
 \end{enumerate}
@@ -478,14 +474,12 @@ rpm_limit = 0
 \end{lstlisting}
 \end{configbox}
 
-\tip{Using a lower temperature setting (0.01-0.1) produces more consistent results, which is generally preferable for systematic reviews where reproducibility is important.}
-
 \section{Running Analyses}
 
 With your literature prepared, you're ready to configure and execute the systematic review.
 
 \subsection{Finalizing Review Configuration}
-
+\tip{When extracting numerical data (like percentages or measurements), use empty value arrays `[""]` to allow the model to extract the exact values rather than categorizing them.}
 \begin{enumerate}
     \item Define your prompt structure to instruct the LLM.
     \item Specify the review items (information to extract) in your configuration.
@@ -527,10 +521,8 @@ values = ["historical", "current", "future projection", "mixed", ""]
 \end{lstlisting}
 \end{configbox}
 
-\tip{When extracting numerical data (like percentages or measurements), use empty value arrays `[""]` to allow the model to extract the exact values rather than categorizing them.}
-
 \subsection{Executing the Review}
-
+\note{For large reviews, consider running a test on a small subset of papers first to validate your configuration before processing all documents.}
 \begin{commandbox}[Command: Running the Systematic Review]
 \begin{lstlisting}[language=Bash]
 # Navigate to your project directory
@@ -541,17 +533,14 @@ cd my_systematic_review
 \end{lstlisting}
 \end{commandbox}
 
-\note{For large reviews, consider running a test on a small subset of papers first to validate your configuration before processing all documents.}
-
 \subsection{Monitoring Progress}
 
 \begin{enumerate}
-    \item Monitor the console output for progress updates.
+    \item Monitor the console output for progress updates.\warning{Long-running reviews may encounter API rate limits. Use the `tpm\_limit` and `rpm\_limit` settings in your configuration to manage API usage and avoid interruptions.}
     \item Check log files if you've enabled detailed logging.
     \item Address any errors or warnings that appear during processing.
 \end{enumerate}
 
-\warning{Long-running reviews may encounter API rate limits. Use the `tpm\_limit` and `rpm\_limit` settings in your configuration to manage API usage and avoid interruptions.}
 \begin{commandbox}[Command: Running with Detailed Logging]
 \begin{lstlisting}[language=Bash]
 # First modify your config file to set log_level to "high"
@@ -567,7 +556,7 @@ Once your review is complete, you'll need to analyze and understand the extracte
 \subsection{Understanding Output Files}
 
 \begin{enumerate}
-    \item Locate your results file (CSV or JSON format).
+    \item Locate your results file (CSV or JSON format).\reminder{If you enabled `cot\_justification`, each paper will have a corresponding justification file that explains the reasoning behind the extracted information. These can be invaluable for validation and deeper understanding.}
     \item Open supplementary files like justifications or summaries if enabled.
     \item Understand the structure of the output data.
 \end{enumerate}
@@ -581,7 +570,6 @@ paper3.txt,multiple,multiple factors,varied by region and crop,yes,mixed
 \end{lstlisting}
 \end{infobox}
 
-\reminder{If you enabled `cot\_justification`, each paper will have a corresponding justification file that explains the reasoning behind the extracted information. These can be invaluable for validation and deeper understanding.}
 
 \subsection{Validating Extraction Quality}
 
