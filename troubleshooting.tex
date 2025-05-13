@@ -24,11 +24,12 @@ This chapter addresses common issues you might encounter when using \texttt{pris
     On macOS, you may need to right-click the executable and select "Open" the first time you run it. After confirming once, you can run it normally.
 
     \item \textbf{Issue: Missing dependencies message}
-
-    \note{The standalone binaries should include all required dependencies. If you see dependency errors, you may have downloaded an incomplete file. Try downloading again or check for platform-specific versions.}
+    \\
+    The standalone binaries should include all required dependencies. If you see dependency errors, you may have downloaded an incomplete file. Try downloading again or check for platform-specific versions.
 \end{itemize}
 
 \subsection{Package Installation Issues}
+\warning{Package installation problems are often environment-specific. If you continue to experience issues, consider using the standalone binary instead, which doesn't require compiling or managing dependencies.}
 
 \begin{itemize}
     \item \textbf{Issue: Python package installation fails}
@@ -83,11 +84,10 @@ This chapter addresses common issues you might encounter when using \texttt{pris
     \end{commandbox}
 \end{itemize}
 
-\warning{Package installation problems are often environment-specific. If you continue to experience issues, consider using the standalone binary instead, which doesn't require compiling or managing dependencies.}
-
 \section{Configuration Errors}
 
 \subsection{TOML File Syntax Problems}
+\tip{Use a TOML validator like \href{https://toml-online.com/}{toml-online.com} to check your configuration file for syntax errors before running \texttt{prismAId}.}
 
 \begin{itemize}
     \item \textbf{Issue: "Failed to parse TOML" or similar error}
@@ -118,14 +118,13 @@ This chapter addresses common issues you might encounter when using \texttt{pris
     \end{lstlisting}
     \end{configbox}
 
-    \tip{Use a TOML validator like \href{https://toml-online.com/}{toml-online.com} to check your configuration file for syntax errors before running \texttt{prismAId}.}
-
     \item \textbf{Issue: Nested sections not recognized correctly}
-
-    \reminder{TOML sections must be properly nested. For example, `[project.llm.1]` is correct, but `[project][llm][1]` would be incorrect.}
+    \\
+    TOML sections must be properly nested. For example, `[project.llm.1]` is correct, but `[project][llm][1]` would be incorrect.
 \end{itemize}
 
 \subsection{Path-Related Problems}
+\tip{Always use absolute paths in your configuration file to avoid path resolution issues. Relative paths can cause problems if you run \texttt{prismAId} from different directories.}
 
 \begin{itemize}
     \item \textbf{Issue: "Directory not found" or "File not found" errors}
@@ -148,11 +147,9 @@ This chapter addresses common issues you might encounter when using \texttt{pris
     \end{lstlisting}
     \end{commandbox}
 
-    \tip{Always use absolute paths in your configuration file to avoid path resolution issues. Relative paths can cause problems if you run \texttt{prismAId} from different directories.}
-
     \item \textbf{Issue: Path encoding problems with non-ASCII characters}
-
-    \note{If your paths contain non-ASCII characters (like accented letters or non-Latin scripts), make sure your configuration file is saved with UTF-8 encoding.}
+    \\
+    If your paths contain non-ASCII characters (like accented letters or non-Latin scripts), make sure your configuration file is saved with UTF-8 encoding.
 \end{itemize}
 
 \subsection{API Key Configuration Issues}
@@ -177,10 +174,11 @@ This chapter addresses common issues you might encounter when using \texttt{pris
     export OPENAI_API_KEY=your-api-key
     \end{lstlisting}
     \end{commandbox}
+    You may also specify the API key in the review project configuration file.
 
     \item \textbf{Issue: API key works in environment but not in configuration}
-
-    \warning{Check for extra spaces or invisible characters in your API key. Copy-pasting from certain sources can introduce these. Try re-typing the key manually if problems persist.}
+    \\
+    Check for extra spaces or invisible characters in your API key. Copy-pasting from certain sources can introduce these. Try re-typing the key manually if problems persist.
 \end{itemize}
 
 \section{Common Fixes for Each Tool}
@@ -189,6 +187,7 @@ This chapter addresses common issues you might encounter when using \texttt{pris
 
 \begin{itemize}
     \item \textbf{Issue: Zotero downloads failing}
+    \note{Zotero collection names are case-sensitive. Ensure your collection path exactly matches what appears in your Zotero library.}
 
     \begin{configbox}[Solution: Zotero Configuration Fixes]
     \begin{lstlisting}[language=TOML]
@@ -204,50 +203,28 @@ This chapter addresses common issues you might encounter when using \texttt{pris
     \end{lstlisting}
     \end{configbox}
 
-    \note{Zotero collection names are case-sensitive. Ensure your collection path exactly matches what appears in your Zotero library.}
-
     \item \textbf{Issue: URL downloads timing out or failing}
-
-    \begin{commandbox}[Solution: URL Download Issues]
-    \begin{lstlisting}[language=Bash]
-    # Check connectivity to the URL
-    curl -I https://example.com/paper.pdf
-
-    # Try downloading with increased timeout
-    # (modify the source URL file to include fewer URLs per run)
-    ./prismaid -download-URL papers_batch1.txt
-    \end{lstlisting}
-    \end{commandbox}
-
-    \reminder{Some publishers block automated downloads. Consider using Zotero integration or manually downloading papers from repositories with strict access controls.}
+    \\
+    Some publishers block automated downloads. Consider using Zotero integration or manually downloading papers from repositories with strict access controls.
 \end{itemize}
 
 \subsection{Convert Tool Issues}
 
 \begin{itemize}
     \item \textbf{Issue: PDF conversion producing empty or gibberish text}
-
-    \begin{commandbox}[Solution: Check PDF Quality]
-    \begin{lstlisting}[language=Bash]
-    # View PDF information
-    pdfinfo problem_paper.pdf
-
-    # For scanned PDFs, you need OCR software first
-    # prismAId can't extract text from image-based PDFs
-    \end{lstlisting}
-    \end{commandbox}
-
-    \warning{The Convert tool cannot extract text from scanned image PDFs or PDFs with strong copy protection. Use OCR software like Adobe Acrobat or Tesseract first, or manually transcribe critical sections.}
+    \\
+    The Convert tool cannot extract text from scanned image PDFs or PDFs with strong copy protection. Use OCR software like Adobe Acrobat or Tesseract first, or manually transcribe critical sections.
 
     \item \textbf{Issue: PDF conversion missing text or with garbled formatting}
-
-    \tip{PDFs with complex layouts (multiple columns, text boxes, etc.) may not convert perfectly. Consider manually editing the extracted text files to fix critical sections or remove unnecessary content.}
+    \\
+    PDFs with complex layouts (multiple columns, text boxes, etc.) may not convert perfectly. Consider manually editing the extracted text files to fix critical sections or remove unnecessary content.
 \end{itemize}
 
 \subsection{Review Tool Issues}
 
 \begin{itemize}
     \item \textbf{Issue: Review stops after processing only a few files}
+    \note{If hitting rate limits, configure appropriate `tpm\_limit` and `rpm\_limit` values in your configuration. This will automatically pace the requests to stay within provider limits.}
 
     \begin{commandbox}[Solution: Check Rate Limits and API Status]
     \begin{lstlisting}[language=Bash]
@@ -261,9 +238,8 @@ This chapter addresses common issues you might encounter when using \texttt{pris
     \end{lstlisting}
     \end{commandbox}
 
-    \note{If hitting rate limits, configure appropriate `tpm\_limit` and `rpm\_limit` values in your configuration. This will automatically pace the requests to stay within provider limits.}
-
     \item \textbf{Issue: Reviews producing unexpected or empty results}
+    \reminder{Check the model's justifications and logs to understand why it's producing unexpected results. You may need to refine your prompt or review structure.}
 
     \begin{configbox}[Solution: Prompt Debugging]
     \begin{lstlisting}[language=TOML]
@@ -276,13 +252,13 @@ This chapter addresses common issues you might encounter when using \texttt{pris
     \end{lstlisting}
     \end{configbox}
 
-    \reminder{Check the model's justifications and logs to understand why it's producing unexpected results. You may need to refine your prompt or review structure.}
 \end{itemize}
 
 \section{Performance and Resource Issues}
 
 \begin{itemize}
     \item \textbf{Issue: Reviews running very slowly}
+    \tip{For large reviews, consider processing subsets of your documents in parallel if your API plan allows.}
 
     \begin{configbox}[Solution: Performance Optimization]
     \begin{lstlisting}[language=TOML]
@@ -297,15 +273,14 @@ This chapter addresses common issues you might encounter when using \texttt{pris
     \end{lstlisting}
     \end{configbox}
 
-    \tip{For large reviews, consider using batch processing as shown in the Advanced Features chapter, processing subsets of your documents in parallel if your API plan allows.}
-
     \item \textbf{Issue: Out of memory errors with large documents}
-
-    \warning{Very large documents may exceed the context window of LLMs or cause memory issues. Consider splitting extremely large papers into smaller sections or removing non-essential content before processing.}
+    \\
+    Very large documents may exceed the context window of LLMs or cause memory issues. Consider splitting extremely large papers into smaller sections or removing non-essential content before processing.
 \end{itemize}
 
 \section{Jupyter Notebook Issues}
-
+\\
+This issue may occur when the kernel cannot handle interactive prompts. The following workaround intercepts and automatically answers confirmation prompts.
 \begin{itemize}
     \item \textbf{Issue: Python kernel crashing in Jupyter when running reviews}
 
@@ -358,13 +333,11 @@ This chapter addresses common issues you might encounter when using \texttt{pris
     run_review_with_auto_input(input_str)
     \end{lstlisting}
     \end{commandbox}
-
-    \note{This issue occurs when the kernel cannot handle interactive prompts. The workaround intercepts and automatically answers confirmation prompts.}
 \end{itemize}
 
 \section{Seeking Further Help}
 
-If you continue to experience issues after trying the solutions in this chapter:
+If you continue to experience issues after trying the solutions in this chapter:\reminder{When seeking help, always include your \texttt{prismAId} version, operating system, error messages, and, if possible, a minimal reproducible example of your issue.}
 
 \begin{itemize}
     \item \textbf{Check Documentation}: Review the online documentation at \href{https://open-and-sustainable.github.io/prismaid/}{open-and-sustainable.github.io/prismaid/}
@@ -373,8 +346,6 @@ If you continue to experience issues after trying the solutions in this chapter:
 
     \item \textbf{Matrix Support Room}: Join the \href{https://matrix.to/#/#prismAId-support:matrix.org}{prismAId Support Room} to discuss your issue with the community
 \end{itemize}
-
-\reminder{When seeking help, always include your \texttt{prismAId} version, operating system, error messages, and a minimal reproducible example of your issue.}
 
 \begin{commandbox}[Gathering System Information for Support]
 \begin{lstlisting}[language=Bash]
@@ -407,7 +378,7 @@ This chapter addresses common questions about \texttt{prismAId}, its capabilitie
 
 \subsection{What types of systematic reviews is prismAId suitable for?}
 
-\texttt{prismAId} is designed to handle a wide range of systematic review types across various disciplines. It works well for:
+\texttt{prismAId} is designed to handle a wide range of systematic review types across various disciplines. It works well for:\note{While prismAId can extract information from any text-based literature, it performs best when the information being sought is explicitly stated in the text rather than requiring complex inference or domain-specific interpretation.}
 
 \begin{itemize}
     \item Literature reviews in scientific fields
@@ -417,11 +388,9 @@ This chapter addresses common questions about \texttt{prismAId}, its capabilitie
     \item Qualitative evidence syntheses
 \end{itemize}
 
-\note{While prismAId can extract information from any text-based literature, it performs best when the information being sought is explicitly stated in the text rather than requiring complex inference or domain-specific interpretation.}
-
 \subsection{Can I use prismAId with non-English literature?}
 
-Yes, but with some limitations. \texttt{prismAId}'s underlying LLMs support multiple languages with varying degrees of proficiency. However:
+Yes, but with some limitations.\tip{For multilingual reviews, consider testing the extraction quality on a sample of non-English papers before proceeding with the full review. You may need to adjust your prompts to account for language-specific considerations.} \texttt{prismAId}'s underlying LLMs support multiple languages with varying degrees of proficiency. However:
 
 \begin{itemize}
     \item English literature typically yields the most reliable results
@@ -429,8 +398,6 @@ Yes, but with some limitations. \texttt{prismAId}'s underlying LLMs support mult
     \item Other languages may have reduced extraction accuracy
     \item The Convert tool may struggle with non-Latin character sets
 \end{itemize}
-
-\tip{For multilingual reviews, consider testing the extraction quality on a sample of non-English papers before proceeding with the full review. You may need to adjust your prompts to account for language-specific considerations.}
 
 \subsection{Is prismAId compliant with systematic review reporting guidelines?}
 
@@ -463,14 +430,12 @@ https://doi.org/10.5281/zenodo.11210796
 
 \subsection{Can I use prismAId with Zotero/Mendeley/EndNote?}
 
-Yes, \texttt{prismAId} offers integration options with reference managers:
+Yes, \texttt{prismAId} offers integration options with reference managers:\reminder{When using the Zotero integration, ensure papers have attached PDFs in your Zotero library. prismAId cannot download papers that don't have attachments.}
 
 \begin{itemize}
     \item \textbf{Zotero}: Direct integration via the Download tool, which can access papers from your Zotero collections using the API
     \item \textbf{Mendeley/EndNote}: No direct API integration, but you can export papers to a folder and then use \texttt{prismAId} to process them
 \end{itemize}
-
-\reminder{When using the Zotero integration, ensure papers have attached PDFs in your Zotero library. prismAId cannot download papers that don't have attachments.}
 
 \subsection{Can I use prismAId with statistical software for meta-analysis?}
 
@@ -525,15 +490,13 @@ if(nrow(meta_data) >= 3) {
 
 \subsection{Can I use prismAId with qualitative analysis software?}
 
-Yes, \texttt{prismAId} can be used alongside qualitative analysis tools:
+Yes, \texttt{prismAId} can be used alongside qualitative analysis tools:\tip{For qualitative reviews, consider using more open-ended extraction fields in your review structure and then conducting more detailed thematic analysis in specialized software.}
 
 \begin{itemize}
     \item Export results to CSV/JSON and import into NVivo, ATLAS.ti, or MAXQDA
     \item Use \texttt{prismAId} for initial coding and then refine in specialized software
     \item Combine AI-assisted extraction with manual qualitative analysis
 \end{itemize}
-
-\tip{For qualitative reviews, consider using more open-ended extraction fields in your review structure and then conducting more detailed thematic analysis in specialized software.}
 
 \subsection{Can I integrate prismAId into automated research workflows?}
 
@@ -546,71 +509,16 @@ Yes, \texttt{prismAId} can be integrated into automated research workflows:
     \item Chain with other research tools using scripts
 \end{itemize}
 
-\begin{commandbox}[Python Script for Automated Workflow]
-\begin{lstlisting}[language=Python]
-import prismaid
-import pandas as pd
-import matplotlib.pyplot as plt
-import os
-from datetime import datetime
-
-# Create dated output directory
-today = datetime.now().strftime("%Y-%m-%d")
-output_dir = f"systematic_review_{today}"
-os.makedirs(output_dir, exist_ok=True)
-
-# 1. Download new papers from URL list
-url_file = "new_papers.txt"
-download_dir = f"{output_dir}/pdfs"
-os.makedirs(download_dir, exist_ok=True)
-prismaid.download_url_list(url_file, download_dir)
-
-# 2. Convert PDFs to text
-text_dir = f"{output_dir}/texts"
-os.makedirs(text_dir, exist_ok=True)
-prismaid.convert(download_dir, "pdf", text_dir)
-
-# 3. Update configuration with new paths
-with open("template_config.toml", "r") as f:
-    config = f.read()
-
-config = config.replace("INPUT_DIR_PLACEHOLDER", text_dir)
-config = config.replace("OUTPUT_FILE_PLACEHOLDER", f"{output_dir}/results")
-
-config_path = f"{output_dir}/config.toml"
-with open(config_path, "w") as f:
-    f.write(config)
-
-# 4. Run the review
-prismaid.review(config)
-
-# 5. Generate visualizations from results
-results = pd.read_csv(f"{output_dir}/results.csv")
-
-# Example: Create a bar chart of findings
-plt.figure(figsize=(10, 6))
-results['climate_factor'].value_counts().plot(kind='bar')
-plt.title('Distribution of Climate Factors in Literature')
-plt.tight_layout()
-plt.savefig(f"{output_dir}/climate_factors.png")
-
-# Log completion
-with open(f"{output_dir}/log.txt", "w") as f:
-    f.write(f"Automated review completed at {datetime.now()}\n")
-    f.write(f"Processed {len(results)} papers\n")
-\end{lstlisting}
-\end{commandbox}
-
 \section{Performance Optimization}
 
 \subsection{How can I optimize prismAId for speed?}
 
-To improve processing speed:
+To improve processing speed:\warning{Faster models may have lower accuracy for complex extraction tasks. Always validate a sample of results when optimizing for speed.}
 
 \begin{itemize}
     \item \textbf{Use faster models}: Models like \texttt{gpt-3.5-turbo}, \texttt{claude-3-haiku}, or \texttt{gemini-1.5-flash} process text more quickly than their larger counterparts
     \item \textbf{Reduce text length}: Remove non-essential sections (references, acknowledgments) from papers
-    \item \textbf{Batch processing}: Process papers in parallel using multiple instances
+    \item \textbf{Batch processing}: Process papers in parallel using multiple instances, an din particular if using multiple models and from different providers
     \item \textbf{Optimize rate limits}: Set appropriate \texttt{tpm\_limit} and \texttt{rpm\_limit} values based on your API plan
 \end{itemize}
 
@@ -625,8 +533,6 @@ tpm_limit = 60000  # Adjust based on your tier
 rpm_limit = 3000   # Adjust based on your tier
 \end{lstlisting}
 \end{configbox}
-
-\warning{Faster models may have lower accuracy for complex extraction tasks. Always validate a sample of results when optimizing for speed.}
 
 \subsection{How can I optimize prismAId for accuracy?}
 
@@ -659,7 +565,7 @@ persona = "You are an expert scientist with extensive experience conducting syst
 
 \subsection{How can I optimize prismAId for cost efficiency?}
 
-To minimize costs:
+To minimize costs:\tip{For cost-sensitive projects, run a small test first with 5-10 papers and examine the log output (set `log\_level = "medium"`) to see token usage and estimated costs per paper.}
 
 \begin{itemize}
     \item \textbf{Use automatic model selection}: Leave the model field empty (`model = ""`) to let \texttt{prismAId} choose the most cost-effective model
@@ -680,34 +586,11 @@ rpm_limit = 0
 \end{lstlisting}
 \end{configbox}
 
-\tip{For cost-sensitive projects, run a small test first with 5-10 papers and examine the log output (set `log\_level = "medium"`) to see token usage and estimated costs per paper.}
-
-\subsection{What are typical processing speeds and costs?}
-
-Performance metrics vary based on paper length, model choice, and extraction complexity:
-
-\begin{commandbox}[Typical Performance Metrics]
-\begin{lstlisting}
-Model               | Avg. Time Per Paper | Approx. Cost Per Paper
---------------------|---------------------|----------------------
-gpt-3.5-turbo       | 5-15 seconds       | $0.01-0.05
-gpt-4o-mini         | 10-30 seconds      | $0.01-0.08
-gpt-4o              | 15-45 seconds      | $0.05-0.25
-claude-3-haiku      | 5-20 seconds       | $0.01-0.08
-claude-3-opus       | 20-60 seconds      | $0.1-0.5
-gemini-1.5-flash    | 3-10 seconds       | $0.0025-0.01
-gemini-1.5-pro      | 10-30 seconds      | $0.005-0.03
-
-Note: Based on average 10-15 page scientific papers with default settings.
-Actual times and costs will vary based on paper length and complexity.
-\end{lstlisting}
-\end{commandbox}
-
 \section{Methodological Questions}
 
 \subsection{How accurate is information extraction with prismAId?}
 
-The accuracy of \texttt{prismAId} extractions depends on several factors:
+The accuracy of \texttt{prismAId} extractions depends on several factors:\reminder{Always validate a subset of extractions manually to assess accuracy for your specific review task. Consider using ensemble reviews for high-stakes systematic reviews.}
 
 \begin{itemize}
     \item \textbf{Prompt quality}: Well-crafted prompts improve accuracy
@@ -715,10 +598,6 @@ The accuracy of \texttt{prismAId} extractions depends on several factors:
     \item \textbf{Model capability}: More advanced models generally provide higher accuracy
     \item \textbf{Document quality}: Clean, well-structured texts yield better results
 \end{itemize}
-
-\note{In validation studies, accuracy typically ranges from 85-95\% for straightforward information (e.g., methodology type, sample size) to 70-85\% for more complex or subjective information (e.g., study limitations, conceptual frameworks).}
-
-\reminder{Always validate a subset of extractions manually to assess accuracy for your specific review task. Consider using ensemble reviews for high-stakes systematic reviews.}
 
 \subsection{How should I validate prismAId results?}
 
@@ -732,88 +611,26 @@ Best practices for validation include:
     \item Document validation process and results in your methods section
 \end{itemize}
 
-\begin{commandbox}[Python Code for Calculating Cohen's Kappa with Human Validation]
-\begin{lstlisting}[language=Python]
-import pandas as pd
-from sklearn.metrics import cohen_kappa_score
-
-# Load AI-extracted data
-ai_results = pd.read_csv("prismaid_results.csv")
-
-# Load human validation data (same papers, same fields)
-human_results = pd.read_csv("human_validation.csv")
-
-# Ensure the same papers are being compared
-common_papers = set(ai_results['filename']).intersection(set(human_results['filename']))
-ai_subset = ai_results[ai_results['filename'].isin(common_papers)]
-human_subset = human_results[human_results['filename'].isin(common_papers)]
-
-# Sort both dataframes by filename to align rows
-ai_subset = ai_subset.sort_values('filename').reset_index(drop=True)
-human_subset = human_subset.sort_values('filename').reset_index(drop=True)
-
-# Calculate agreement for each extracted field
-agreement_results = {}
-for field in ['methodology_type', 'sample_size', 'climate_factor', 'crop_type']:
-    if field in ai_subset.columns and field in human_subset.columns:
-        try:
-            # Calculate simple agreement percentage
-            agreement = sum(ai_subset[field] == human_subset[field]) / len(ai_subset)
-
-            # Calculate Cohen's Kappa for categorical variables
-            kappa = cohen_kappa_score(ai_subset[field], human_subset[field])
-
-            agreement_results[field] = {
-                'agreement_percentage': agreement * 100,
-                'cohens_kappa': kappa
-            }
-        except:
-            print(f"Error calculating agreement for {field}")
-
-# Print results
-for field, metrics in agreement_results.items():
-    print(f"{field}:")
-    print(f"  Agreement: {metrics['agreement_percentage']:.1f}%")
-    print(f"  Cohen's Kappa: {metrics['cohens_kappa']:.3f}")
-
-    # Interpret Kappa value
-    kappa = metrics['cohens_kappa']
-    interpretation = ""
-    if kappa < 0.20: interpretation = "Poor agreement"
-    elif kappa < 0.40: interpretation = "Fair agreement"
-    elif kappa < 0.60: interpretation = "Moderate agreement"
-    elif kappa < 0.80: interpretation = "Substantial agreement"
-    else: interpretation = "Almost perfect agreement"
-
-    print(f"  Interpretation: {interpretation}")
-    print()
-\end{lstlisting}
-\end{commandbox}
-
 \subsection{Can prismAId completely replace manual review?}
 
-No, \texttt{prismAId} should be viewed as an assistive tool rather than a complete replacement for human judgment:
+No, \texttt{prismAId} should be viewed as an assistive tool rather than a complete replacement for human judgment:\warning{Complete automation of systematic reviews without human supervision is not recommended, particularly for reviews that inform clinical practice, policy decisions, or other high-stakes applications.}
 
 \begin{itemize}
-    \item It excels at reducing the time-intensive aspects of systematic reviews
+    \item It excels at reducing the time-intensive and subjective aspects of systematic reviews
     \item Human oversight remains essential for quality control and interpretation
     \item Domain expertise is still needed to contextualize findings and draw conclusions
     \item Complex or nuanced information may require human validation
 \end{itemize}
 
-\warning{Complete automation of systematic reviews without human supervision is not recommended, particularly for reviews that inform clinical practice, policy decisions, or other high-stakes applications.}
-
 \section{Advanced Usage Questions}
 
-\subsection{Can I use prismAId with custom or proprietary LLMs?}
+\subsection{Can I use prismAId with custom or proprietary LLMs?}\tip{As an open-source project, prismAId can be extended to support additional LLM providers. If you have programming experience, you could fork the repository and add support for your preferred models by extending the interface code.}
 
 Currently, \texttt{prismAId} supports five major commercial LLM providers (OpenAI, GoogleAI, Anthropic, Cohere, DeepSeek). Support for custom or self-hosted models is not built into the main distribution.
 
-\tip{As an open-source project, prismAId can be extended to support additional LLM providers. If you have programming experience, you could fork the repository and add support for your preferred models by extending the interface code.}
-
 \subsection{Can I use prismAId for sensitive or confidential data?}
 
-You should exercise caution when using \texttt{prismAId} with sensitive data:
+You should exercise caution when using \texttt{prismAId} with sensitive data:\warning{When using commercial LLM APIs, the text of your documents is sent to third-party servers. While providers typically have privacy safeguards, you should never process confidential or personally identifiable information without ensuring compliance with relevant regulations and obtaining appropriate permissions.}
 
 \begin{itemize}
     \item All text sent to LLM providers may be processed on their servers
@@ -822,11 +639,9 @@ You should exercise caution when using \texttt{prismAId} with sensitive data:
     \item For highly sensitive content, consider redacting identifying information before processing
 \end{itemize}
 
-\warning{When using commercial LLM APIs, the text of your documents is sent to third-party servers. While providers typically have privacy safeguards, you should never process confidential or personally identifiable information without ensuring compliance with relevant regulations and obtaining appropriate permissions.}
-
 \subsection{How can I contribute to prismAId development?}
 
-As an open-source project, \texttt{prismAId} welcomes contributions:
+As an open-source project, \texttt{prismAId} welcomes contributions:\reminder{Before contributing code, familiarize yourself with the project's contribution guidelines and code of conduct in the repository.}
 
 \begin{itemize}
     \item Report bugs or request features through GitHub issues
@@ -857,19 +672,15 @@ git push origin feature/your-feature-name
 \end{lstlisting}
 \end{commandbox}
 
-\reminder{Before contributing code, familiarize yourself with the project's contribution guidelines and code of conduct in the repository.}
-
 \subsection{Will my API usage for prismAId affect my other projects using the same API keys?}
 
-Yes, any \texttt{prismAId} usage will count toward your overall API usage limits with each provider:
+Yes, any \texttt{prismAId} usage will count toward your overall API usage limits with each provider:\tip{For organizations with multiple projects using the same LLM providers, consider creating separate API keys for different projects to track usage more effectively and implement budget controls.}
 
 \begin{itemize}
     \item API calls made by \texttt{prismAId} will appear in your provider dashboard
     \item Usage counts toward any quotas or rate limits on your account
     \item Billing is based on total token usage across all applications using your key
 \end{itemize}
-
-\tip{For organizations with multiple projects using the same LLM providers, consider creating separate API keys for different projects to track usage more effectively and implement budget controls.}
 
 \section{Future Development Questions}
 
@@ -879,17 +690,15 @@ While specific roadmap details may change, planned enhancements include:
 
 \begin{itemize}
     \item Support for additional LLM providers and models
-    \item Enhanced visualization and analysis tools
     \item Improved OCR integration for image-based PDFs
     \item More sophisticated ensemble methods
-    \item Interactive review refinement capabilities
 \end{itemize}
 
 \note{As an open-source project, prismAId's development direction is influenced by community needs and contributions. You can suggest features or vote on existing proposals through the GitHub repository.}
 
 \subsection{How can I stay updated on prismAId developments?}
 
-To stay informed about new releases and features:
+To stay informed about new releases and features:\reminder{Major version updates may include changes to configuration structure or API methods. Always review the changelog before upgrading.}
 
 \begin{itemize}
     \item Follow the GitHub repository
@@ -905,8 +714,6 @@ Matrix Announcements: https://matrix.to/#/#prismAId-announcements:matrix.org
 Documentation: https://open-and-sustainable.github.io/prismaid/
 \end{lstlisting}
 \end{commandbox}
-
-\reminder{Major version updates may include changes to configuration structure or API methods. Always review the changelog before upgrading.}
 
 \section{Conclusion}
 
