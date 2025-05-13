@@ -169,13 +169,13 @@ After running an ensemble review, you'll need specialized approaches to analyze 
 
 When running an ensemble review, \texttt{prismAId} creates separate result files for each model used:
 
-\begin{commandbox}[Example Output Files from Ensemble Review]
+\begin{infobox}[Example Output Files from Ensemble Review]
 \begin{lstlisting}
 results_OpenAI_gpt-4o-mini.csv
 results_GoogleAI_gemini-1.5-flash.csv
 results_Anthropic_claude-3-haiku.csv
 \end{lstlisting}
-\end{commandbox}
+\end{infobox}
 
 The individual model files contain the standard extraction results. Analyzing them, researchers whould prepare ensemble summary file containing consensus metrics and comparison data.
 
@@ -629,7 +629,7 @@ These settings help you:
     \item \textbf{Balance Resource Usage}: Prevent spikes in API consumption
 \end{itemize}
 
-\begin{commandbox}[Example Provider Rate Limits]
+\begin{infobox}[Example Provider Rate Limits]
 \begin{lstlisting}
 Provider  | Model            | Default TPM  | Default RPM
 ----------|------------------|--------------|------------
@@ -639,7 +639,7 @@ Anthropic | claude-3-haiku   | N/A          | 5,000
 GoogleAI  | gemini-1.5-flash | 4,000,000    | N/A
 Cohere    | command-r        | 100,000      | 1,000
 \end{lstlisting}
-\end{commandbox}
+\end{infobox}
 
 Please note that not respecting rate limits may result in API errors and in not obtaining results for some manuscripts.
 

@@ -329,13 +329,13 @@ cd my_systematic_review
     \item Run the URL download command to fetch all papers.
 \end{enumerate}
 
-\begin{commandbox}[Example URL List File: paper\_urls.txt]
+\begin{infobox}[Example URL List File: paper\_urls.txt]
 \begin{lstlisting}
 https://arxiv.org/pdf/2303.08774.pdf
 https://www.science.org/doi/pdf/10.1126/science.1236498
 https://www.nature.com/articles/s41586-021-03819-2.pdf
 \end{lstlisting}
-\end{commandbox}
+\end{infobox}
 
 \begin{commandbox}[Command: Downloading Papers from URL List]
 \begin{lstlisting}[language=Bash]
@@ -572,14 +572,14 @@ Once your review is complete, you'll need to analyze and understand the extracte
     \item Understand the structure of the output data.
 \end{enumerate}
 
-\begin{commandbox}[Example CSV Result Structure]
+\begin{infobox}[Example CSV Result Structure]
 \begin{lstlisting}
 filename,crop_type,climate_factor,yield_impact,adaptation_strategies_discussed,study_timeframe
 paper1.txt,wheat,temperature increase,-6.4% per °C,yes,future projection
 paper2.txt,rice,precipitation change,-3.2% per 10% rainfall decrease,yes,historical
 paper3.txt,multiple,multiple factors,varied by region and crop,yes,mixed
 \end{lstlisting}
-\end{commandbox}
+\end{infobox}
 
 \reminder{If you enabled `cot\_justification`, each paper will have a corresponding justification file that explains the reasoning behind the extracted information. These can be invaluable for validation and deeper understanding.}
 
@@ -710,7 +710,7 @@ plt.savefig("results/crop_climate_summary.png", dpi=300)
     \item Properly cite \texttt{prismAId} in your methodology section.\note{Some journals may have specific requirements or guidelines for reporting AI-assisted analyses. Check with your target journal for any specific policies.}
 \end{enumerate}
 
-\begin{commandbox}[Example Citation for prismAId]
+\begin{infobox}[Example Citation for prismAId]
 \begin{lstlisting}
 For the systematic information extraction, we used prismAId (Boero, 2024),
 an open-source AI-assisted systematic review toolkit. The review was
@@ -722,7 +722,7 @@ Boero, R. (2024). prismAId - Open Science AI Tools for Systematic,
 Protocol-Based Literature Reviews. Zenodo.
 https://doi.org/10.5281/zenodo.11210796
 \end{lstlisting}
-\end{commandbox}
+\end{infobox}
 
 \section{Conclusion}
 
