@@ -65,7 +65,7 @@ The search and selection phase involves:
 
 \begin{itemize}
     \item \textbf{Comprehensive Search}: Implement systematic search strategies across multiple databases using carefully constructed search terms.\warning{Relying on a single database significantly increases the risk of missing relevant studies. Research shows that even comprehensive databases like PubMed or Web of Science individually capture only 50-75\% of eligible studies in many fields.}
-    \item \textbf{Screening}: Apply inclusion and exclusion criteria in a two-stage process: title/abstract screening followed by full-text assessment.
+    \item \textbf{Screening}: Apply inclusion and exclusion criteria in a two-stage process: title/abstract screening followed by full-text assessment.\note{prismAId's Screening tool can automate the initial filtering of manuscripts using deduplication, language detection, article type classification, and topic relevance scoring, significantly reducing the manual workload before full-text download.}
     \item \textbf{PRISMA Flow Diagram}: Document the selection process, including numbers of studies identified, screened, assessed for eligibility, and included.
 \end{itemize}
 
@@ -226,7 +226,7 @@ metabias(meta_analysis, method = "linreg")
 Traditional systematic review methods are resource-intensive and time-consuming. Recent technological advances have created opportunities to streamline the process while maintaining methodological rigor:
 
 \begin{itemize}
-    \item \textbf{Literature Screening}: Machine learning algorithms can help prioritize relevant studies.\tip{Even with technological assistance, allocate time for pilot testing and validation. Test \texttt{prismAId} with a small subset of your literature before processing your entire dataset.}
+    \item \textbf{Literature Screening}: Machine learning algorithms can help prioritize relevant studies. \texttt{prismAId}'s Screening tool automates this critical step by applying deduplication, language detection, article type classification, and topic relevance scoring to filter manuscripts before full-text download.\tip{Even with technological assistance, allocate time for pilot testing and validation. Test \texttt{prismAId} with a small subset of your literature before processing your entire dataset.}
     \item \textbf{Data Extraction}: Natural language processing can identify key information from texts. This is what the prismAId Review function does.
     \item \textbf{Evidence Synthesis}: Automated tools can assist in organizing and analyzing extracted data.
     \item \textbf{Protocol Management}: Specialized software can guide teams through the systematic review workflow. Other prismAId functions like Download and Convert support specific steps of the workflow.
@@ -287,9 +287,88 @@ mkdir my_systematic_review/results
 \end{lstlisting}
 \end{commandbox}
 
+\section{Screening Manuscripts}
+
+After conducting your literature search and before downloading full texts, use the Screening tool to filter manuscripts efficiently and reduce the volume of papers requiring full review.
+
+\subsection{Why Screen Before Downloading?}
+
+\begin{itemize}
+    \item \textbf{Resource Efficiency}: Avoid downloading and processing irrelevant papers.
+    \item \textbf{Time Savings}: Focus manual review efforts on truly relevant literature.
+    \item \textbf{Systematic Approach}: Apply consistent inclusion/exclusion criteria across all manuscripts.
+    \item \textbf{Audit Trail}: Document exclusion decisions for transparency and reproducibility.
+\end{itemize}
+
+\subsection{Preparing Your Screening Configuration}
+
+\begin{configbox}[Configuration: Screening Setup]
+\begin{lstlisting}[language=TOML]
+# screening_config.toml
+[project]
+name = "Climate Change Agriculture Screening"
+author = "Your Name"
+version = "1.0"
+input_file = "search_results.csv"  # Export from your database search
+output_file = "screening_results"
+text_column = "abstract"           # Column containing abstracts
+identifier_column = "doi"          # Unique identifier column
+output_format = "csv"
+log_level = "medium"
+
+[filters.deduplication]
+enabled = true
+compare_fields = ["title", "doi"]
+
+[filters.language]
+enabled = true
+accepted_languages = ["en"]
+
+[filters.article_type]
+enabled = true
+exclude_reviews = true
+exclude_editorials = true
+exclude_letters = true
+
+[filters.topic_relevance]
+enabled = true
+topics = ["climate change AND agriculture",
+          "crop yield AND temperature"]
+min_score = 0.5
+\end{lstlisting}
+\end{configbox}
+
+\subsection{Running the Screening Tool}
+
+\begin{commandbox}[Command: Screening Manuscripts]
+\begin{lstlisting}[language=Bash]
+# Run screening on your search results
+./prismaid --screening config/screening_config.toml
+
+# Review the screening results
+cat results/screening_results.csv | head -n 10
+\end{lstlisting}
+\end{commandbox}
+
+\tip{Start with conservative filtering settings. You can always apply stricter criteria in a second pass, but you cannot recover manuscripts that were incorrectly excluded.}
+
+\warning{Always manually review a sample of excluded manuscripts to ensure your screening criteria are not too restrictive. Check both included and excluded items for false positives and false negatives.}
+
+\subsection{Understanding Screening Results}
+
+The Screening tool outputs a CSV or JSON file containing:
+\begin{itemize}
+    \item Original manuscript metadata
+    \item Inclusion/exclusion decision
+    \item Exclusion reasons (if applicable)
+    \item Filter-specific tags (detected language, article type, relevance score)
+\end{itemize}
+
+\note{Manuscripts passing all filters will have \texttt{include = true} and can proceed to the download phase. Those excluded will have clear reasons documented for your PRISMA flow diagram.}
+
 \section{Importing and Managing Manuscripts}
 
-Once your project and search are set up, you'll need to gather and prepare your literature for analysis.
+Once your project and search are set up, and you've screened your initial results, you'll need to gather and prepare your literature for analysis.
 
 \subsection{Literature Acquisition using the Download Tool}
 

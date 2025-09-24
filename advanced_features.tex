@@ -779,8 +779,270 @@ For more complex extractions, consider dividing review items across multiple pro
     \item \textbf{Publication Workflows}: Generate formatted tables and figures for manuscript inclusion
 \end{itemize}
 
+\section{AI-Assisted Screening Filters}
+
+The screening tool in \texttt{prismAId} offers both traditional rule-based filters and advanced AI-assisted capabilities that can significantly enhance the accuracy and efficiency of manuscript filtering. Understanding when and how to leverage these AI features can dramatically improve your screening outcomes.
+
+\warning{The screening tool operates on metadata and abstracts only, filtering manuscripts BEFORE full-text download. This is NOT a replacement for thorough human review of full manuscripts. Human oversight must extend to the complete document during the actual review phase.}
+
+\reminder{AI-assisted screening helps prioritize and filter based on limited information (titles, abstracts, metadata). Critical decisions about inclusion should always involve human examination of the full text, methodology, results, and conclusions.}
+
+\subsection{Benefits of AI-Assisted Screening for Pre-Download Filtering}
+
+AI-assisted screening provides several advantages over traditional rule-based approaches when filtering manuscripts before download:\tip{AI-assisted screening is particularly valuable for large-scale reviews where manual screening would be prohibitively time-consuming, or when dealing with manuscripts in multiple languages or from diverse research traditions.}
+
+\note{Remember that this screening phase works with limited information—typically just titles, abstracts, and bibliographic metadata. The AI makes decisions based on these fragments, not the complete research. Human review of full texts remains essential for final inclusion decisions.}
+
+\begin{itemize}
+    \item \textbf{Semantic Understanding}: AI models understand context and meaning rather than just matching keywords, reducing false positives and negatives
+    \item \textbf{Language Flexibility}: Better handling of regional variants, mixed-language documents, and non-standard expressions
+    \item \textbf{Nuanced Classification}: More accurate article type identification, especially for papers that don't follow standard formats
+    \item \textbf{Adaptive Learning}: Models can handle edge cases and ambiguous documents better than rigid rules
+    \item \textbf{Cross-Domain Application}: AI adapts to different research fields without extensive rule customization
+\end{itemize}
+
+\subsection{AI Enhancement for Each Filter Type}
+
+\subsubsection{Deduplication with AI}
+
+Traditional deduplication relies on exact or fuzzy string matching of fields like DOI, title, and authors. AI-enhanced deduplication adds semantic similarity detection:
+
+\begin{configbox}[AI-Enhanced Deduplication]
+\begin{lstlisting}
+[filters.deduplication]
+enabled = true
+use_ai = true  # Enable semantic similarity
+compare_fields = ["title", "abstract", "authors"]
+
+# AI understands:
+# - Author name variations (J. Smith vs John Smith)
+# - Title paraphrasing
+# - Abstract rewording in different publications
+# - Translated versions of the same paper
+\end{lstlisting}
+\end{configbox}
+
+\warning{AI deduplication requires more computational resources and API calls. For very large datasets (>10,000 papers), consider using traditional matching first, then AI for ambiguous cases.}
+
+\subsubsection{Language Detection with AI}
+
+While rule-based language detection uses character patterns and dictionaries, AI models understand:
+
+\begin{itemize}
+    \item \textbf{Mixed-Language Content}: Papers with English abstracts but native language titles
+    \item \textbf{Technical Terminology}: Distinguishing between English technical terms in non-English text
+    \item \textbf{Regional Variants}: Brazilian vs. European Portuguese, simplified vs. traditional Chinese
+    \item \textbf{Code-Switching}: Documents that switch between languages
+\end{itemize}
+
+\begin{configbox}[AI Language Detection Example]
+\begin{lstlisting}
+[filters.language]
+enabled = true
+accepted_languages = ["en", "es", "pt"]
+use_ai = true  # Crucial for mixed-language documents
+
+# AI correctly identifies:
+# - Spanish paper with English abstract
+# - Portuguese text with English citations
+# - Mixed language methodology sections
+\end{lstlisting}
+\end{configbox}
+
+\subsubsection{Article Type Classification with AI}
+
+AI-assisted article type classification excels at identifying complex and overlapping categories:\note{A single manuscript can belong to multiple categories. For example, a paper might be classified as both "empirical\_study" and "sample\_study" while also being a "research\_article". AI models better understand these nuanced overlaps.}
+
+\begin{configbox}[AI Article Type Classification]
+\begin{lstlisting}
+[filters.article_type]
+enabled = true
+use_ai = true  # Essential for nuanced classification
+
+# AI can distinguish between:
+# - Systematic reviews vs. narrative reviews
+# - Empirical studies with theoretical frameworks
+# - Methods papers with empirical validation
+# - Case studies vs. case reports
+# - Original research vs. research letters
+
+exclude_reviews = true
+exclude_theoretical = true
+include_types = ["empirical_study", "sample_study"]
+\end{lstlisting}
+\end{configbox}
+
+The AI model analyzes multiple signals:
+\begin{itemize}
+    \item Document structure and section headings
+    \item Methodological language and statistical content
+    \item Results presentation style
+    \item Citation patterns and reference types
+    \item Abstract structure (structured vs. unstructured)
+\end{itemize}
+
+\subsubsection{Topic Relevance Scoring with AI}
+
+AI-powered topic relevance goes beyond keyword matching to understand conceptual alignment:
+
+\begin{configbox}[AI Topic Relevance Configuration]
+\begin{lstlisting}
+[filters.topic_relevance]
+enabled = true
+use_ai = true  # Enables semantic understanding
+topics = [
+    "machine learning applications in healthcare diagnostics",
+    "artificial intelligence for medical image analysis",
+    "deep learning in clinical decision support"
+]
+min_score = 0.6  # AI scores are more reliable, can use higher threshold
+
+[filters.topic_relevance.score_weights]
+keyword_match = 0.2      # Less weight on exact matches
+concept_match = 0.5      # More weight on semantic similarity
+field_relevance = 0.3    # Journal and domain alignment
+\end{lstlisting}
+\end{configbox}
+
+\subsection{Ensemble AI Screening}
+
+For critical screening decisions, you can use multiple AI models to achieve consensus:\reminder{Ensemble screening increases costs proportionally to the number of models used. Reserve this approach for high-stakes reviews where screening accuracy is paramount.}
+
+\begin{configbox}[Multi-Model Ensemble Screening]
+\begin{lstlisting}
+[filters.llm.1]
+provider = "OpenAI"
+model = "gpt-4o-mini"
+temperature = 0.01  # Low temperature for consistency
+
+[filters.llm.2]
+provider = "GoogleAI"
+model = "gemini-1.5-flash"
+temperature = 0.01
+
+[filters.llm.3]
+provider = "Anthropic"
+model = "claude-3-haiku"
+temperature = 0.01
+
+# Majority vote determines classification
+# Papers are excluded only if 2+ models agree
+\end{lstlisting}
+\end{configbox}
+
+\subsection{When to Use AI vs. Rule-Based Screening}
+
+\subsubsection{Use AI-Assisted Screening When:}
+
+\begin{itemize}
+    \item \textbf{Dealing with Heterogeneous Sources}: Papers from multiple disciplines or publication traditions
+    \item \textbf{Multi-Language Corpus}: Manuscripts in various languages or with mixed-language content
+    \item \textbf{Complex Inclusion Criteria}: Nuanced requirements that are hard to express as rules
+    \item \textbf{High Accuracy Requirements}: When false negatives (missing relevant papers) are costly
+    \item \textbf{Small to Medium Datasets}: Under 5,000 papers where API costs are manageable
+\end{itemize}
+
+\subsubsection{Use Rule-Based Screening When:}
+
+\begin{itemize}
+    \item \textbf{Very Large Datasets}: Over 10,000 papers where API costs become significant
+    \item \textbf{Simple Criteria}: Clear-cut exclusions (e.g., wrong publication year, specific keywords)
+    \item \textbf{Speed is Critical}: Need immediate results without API latency
+    \item \textbf{Reproducibility Required}: Exact same results needed across multiple runs
+    \item \textbf{Resource Constraints}: Limited budget for API calls or computational resources
+\end{itemize}
+
+\subsection{Hybrid Screening Strategies}
+
+Combine rule-based and AI approaches for optimal efficiency:\tip{Start with rule-based filtering for obvious exclusions, then apply AI to borderline cases. This "funnel" approach minimizes costs while maximizing accuracy.}
+
+\begin{configbox}[Hybrid Screening Workflow]
+\begin{lstlisting}
+# Step 1: Rule-based first pass (fast, cheap)
+[filters.deduplication]
+enabled = true
+use_ai = false  # Quick exact matching
+compare_fields = ["doi"]  # Only exact DOI matches
+
+# Step 2: AI-assisted second pass (slower, accurate)
+# Run on papers that passed initial screening
+[filters.language]
+enabled = true
+use_ai = true  # Better for remaining papers
+
+[filters.article_type]
+enabled = true
+use_ai = true  # Nuanced classification
+
+[filters.topic_relevance]
+enabled = true
+use_ai = true  # Semantic understanding
+min_score = 0.7  # Higher threshold with AI
+\end{lstlisting}
+\end{configbox}
+
+\subsection{Performance Considerations}
+
+AI-assisted screening impacts performance in several ways:
+
+\begin{itemize}
+    \item \textbf{Processing Time}: AI calls add 0.5-2 seconds per manuscript
+    \item \textbf{API Rate Limits}: Most providers limit requests per minute
+    \item \textbf{Token Costs}: Each manuscript consumes 500-2000 tokens depending on length
+    \item \textbf{Batch Optimization}: Process manuscripts in batches to maximize throughput
+\end{itemize}
+
+\begin{warningbox}[Cost Estimation for AI Screening]
+\begin{lstlisting}
+Rough cost estimates per 1,000 manuscripts:
+- GPT-4o-mini: $0.50 - $2.00
+- Gemini 1.5 Flash: $0.30 - $1.50
+- Claude 3 Haiku: $0.40 - $1.80
+
+Factors affecting cost:
+- Abstract length (longer = more tokens)
+- Number of filters using AI
+- Ensemble configurations (multiplies cost)
+- Retry attempts for failed API calls
+\end{lstlisting}
+\end{warningbox}
+
+\subsection{Validation and Quality Assurance}
+
+\warning{No AI system can fully understand the nuances, quality, and validity of research that a human expert can assess from reading the complete manuscript. The screening tool's decisions are based solely on abstracts and metadata—a fraction of the information available in the full paper.}
+
+When using AI-assisted screening, implement quality checks:
+
+\begin{enumerate}
+    \item \textbf{Pilot Testing}: Run AI screening on a manually validated subset
+    \item \textbf{Spot Checking}: Randomly review 5-10\% of AI decisions
+    \item \textbf{Edge Case Review}: Manually check manuscripts with borderline scores
+    \item \textbf{Disagreement Analysis}: For ensembles, review cases where models disagree
+    \item \textbf{False Negative Testing}: Deliberately include known relevant papers to ensure they pass screening
+    \item \textbf{Full-Text Verification}: Always review the complete manuscript for papers near the exclusion threshold
+\end{enumerate}
+
+\reminder{The screening tool helps you avoid downloading obviously irrelevant papers, but it cannot assess research quality, methodological rigor, or the validity of conclusions. These critical evaluations require human expertise applied to the full manuscript during the review phase.}
+
+\subsection{Best Practices for AI-Assisted Screening}
+
+\note{Think of AI-assisted screening as a first-pass filter, similar to a research assistant who reviews abstracts to identify potentially relevant papers. Just as you would verify the assistant's selections by reading the full papers yourself, AI screening results require human validation with complete manuscripts.}
+
+\begin{enumerate}
+    \item \textbf{Start Conservative}: Begin with lower min\_score thresholds and adjust based on results
+    \item \textbf{Document Model Choices}: Record which models and settings were used for reproducibility
+    \item \textbf{Monitor API Usage}: Track costs and adjust batch sizes to stay within budget
+    \item \textbf{Combine Human and AI}: Use AI to flag borderline cases for human review of full texts
+    \item \textbf{Iterate on Prompts}: For topic relevance, refine topic descriptions based on model performance
+    \item \textbf{Maintain Audit Trails}: Keep logs of all AI decisions for methodological transparency
+    \item \textbf{Plan for Human Review}: Budget time for thorough human examination of full manuscripts that pass screening
+    \item \textbf{Document Limitations}: Clearly state in your methods that AI screening was based on abstracts/metadata only
+\end{enumerate}
+
+\warning{Never make final inclusion/exclusion decisions based solely on AI screening of abstracts. The screening tool's purpose is to reduce the number of papers requiring full-text download and review, not to replace human judgment on complete manuscripts.}
+
 \section{Conclusion}
 
-Advanced features of \texttt{prismAId} significantly enhance its capabilities beyond basic systematic reviews.\tip{Start with simpler configurations and gradually incorporate advanced features as you become more familiar with \texttt{prismAId}. Each feature adds power but also complexity, so build your expertise incrementally.} Ensemble reviews provide increased confidence and uncertainty quantification. Debugging features help identify and resolve issues in the extraction process. Cost management strategies optimize resource utilization, while advanced prompt engineering improves the quality and reliability of extractions. Finally, programmatic integration and automation enable seamless incorporation of \texttt{prismAId} into comprehensive research workflows.
+Advanced features of \texttt{prismAId} significantly enhance its capabilities beyond basic systematic reviews.\tip{Start with simpler configurations and gradually incorporate advanced features as you become more familiar with \texttt{prismAId}. Each feature adds power but also complexity, so build your expertise incrementally.} Ensemble reviews provide increased confidence and uncertainty quantification. Debugging features help identify and resolve issues in the extraction process. Cost management strategies optimize resource utilization, while advanced prompt engineering improves the quality and reliability of extractions. AI-assisted screening filters offer powerful capabilities for more accurate and nuanced manuscript filtering, particularly valuable when dealing with complex inclusion criteria or heterogeneous literature sources. Finally, programmatic integration and automation enable seamless incorporation of \texttt{prismAId} into comprehensive research workflows.
 
 By mastering these advanced features, researchers can conduct more sophisticated, reliable, and efficient systematic reviews that maintain the highest standards of methodological rigor while leveraging the power of artificial intelligence.
